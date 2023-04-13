@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 const NavbarMenu = () => {
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-4">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div className="container-fluid">
-          <Link className="navbar-brand" href="#">
-            Navbar
+          <Link className="navbar-brand" to="/">
+            <h3>Joki Game</h3>
           </Link>
           <button
             className="navbar-toggler"
@@ -23,12 +23,12 @@ const NavbarMenu = () => {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link className="nav-link" aria-current="page" href="#">
+                <Link className="nav-link" aria-current="page" to="/login">
                   Login
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" href="#">
+                <Link className="nav-link" to="/register">
                   Register
                 </Link>
               </li>

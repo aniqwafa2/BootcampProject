@@ -1,15 +1,29 @@
-import React from 'react'
-import { Routes, Route } from 'react-router-dom'
-import { HomePage } from '../pages'
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import {
+  DetailJoki,
+  DetailOrder,
+  HomePage,
+  LoginPage,
+  RegisterPage,
+} from "../pages";
 
 const MainContent = () => {
   return (
-    <div className=''>
+    <div className="bg-dark">
       <Routes>
-        <Route path='' element={<HomePage/>}></Route>
+        <Route path="" element={<HomePage />}></Route>
+        <Route path="login" element={<LoginPage />}></Route>
+        <Route path="register" element={<RegisterPage />}></Route>
+        <Route path="joki">
+          <Route path=":userName" element={<DetailJoki />}></Route>
+        </Route>
+        <Route path="order">
+          <Route path=":id" element={<DetailOrder />}></Route>
+        </Route>
       </Routes>
     </div>
-  )
-}
+  );
+};
 
-export default MainContent
+export default MainContent;
