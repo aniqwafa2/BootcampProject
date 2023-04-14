@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const NavbarMenu = () => {
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <nav className="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
             <h3>Joki Game</h3>
@@ -30,6 +30,16 @@ const NavbarMenu = () => {
               <li className="nav-item">
                 <Link className="nav-link" to="/register">
                   Register
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/order">
+                  Order
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/joki">
+                  Paket Joki
                 </Link>
               </li>
             </ul>

@@ -4,7 +4,11 @@ import {
   DetailJoki,
   DetailOrder,
   HomePage,
+  Joki,
+  ListJoki,
+  ListOrder,
   LoginPage,
+  Order,
   RegisterPage,
 } from "../pages";
 
@@ -15,10 +19,12 @@ const MainContent = () => {
         <Route path="" element={<HomePage />}></Route>
         <Route path="login" element={<LoginPage />}></Route>
         <Route path="register" element={<RegisterPage />}></Route>
-        <Route path="joki">
-          <Route path=":userName" element={<DetailJoki />}></Route>
+        <Route path="joki" element={<Joki />}>
+          <Route path="" element={<ListJoki />}></Route>
+          <Route path="" element={<DetailJoki />}></Route>
         </Route>
-        <Route path="order">
+        <Route path="order" element={<Order></Order>}>
+          <Route path="" element={<ListOrder />}></Route>
           <Route path=":id" element={<DetailOrder />}></Route>
         </Route>
       </Routes>

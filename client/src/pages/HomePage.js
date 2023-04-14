@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import image from "../assets/mobile_legend.jpg";
+import bg_header from '../assets/bg-header'
 import { Link } from "react-router-dom";
 import { AiFillFilter } from "react-icons/ai";
 
 const HomePage = () => {
+  // const [search, setSearch] = useState("");
   const item = [1, 2, 3, 4, 5, 6, 7, 8, 9, 23, 4, 453];
+
+  // const filterHandler = (e) => {};
+
+  const searchHandler = (e) => {};
 
   return (
     <>
-      <img src={image} alt="" className="bg-header" />
+      <img src={bg_header} alt="" className="bg-header" />
       {/* BsFilterSquare */}
       <div className="container pt-4 pb-2">
         <div class="d-flex justify-content-between">
@@ -18,7 +24,7 @@ const HomePage = () => {
               type="search"
               placeholder="Search by name"
               aria-label="Search"
-              // onChange={(e) => filterBrands(e.target.value)}
+              onChange={(e) => searchHandler(e.target.value)}
             />
           </form>
           <Link className="btn btn-secondary mb-2" to="/brands/create">
@@ -31,18 +37,19 @@ const HomePage = () => {
               // const { id, name, since_year, image } = brand;
               return (
                 <div className="col">
-                  <div className="border rounded grid-hover card-list">
-                    <div className="p-1">
-                      <img
-                        className="rounded img-wrap-list mx-auto d-block"
-                        src={image}
-                        alt=""
-                      />
-                      <div className="fs-2 title-wrap">Name</div>
-                      <hr className="divider" />
-                      <div className="text-description-time">Description</div>
-                      <br />
-                      {/* <div class="btn-group">
+                  <Link to="/joki">
+                    <div className="border rounded grid-hover card-list">
+                      <div className="p-1">
+                        <img
+                          className="rounded img-wrap-list mx-auto d-block"
+                          src={image}
+                          alt=""
+                        />
+                        <div className="fs-2 title-wrap">Name</div>
+                        <hr className="divider" />
+                        <div className="text-description-time">Description</div>
+                        <br />
+                        {/* <div class="btn-group">
                         <AiOutlineMenu
                           type="button"
                           id="dropdownMenuButton"
@@ -71,8 +78,9 @@ const HomePage = () => {
                           </li>
                         </ul>
                       </div> */}
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 </div>
               );
             })
