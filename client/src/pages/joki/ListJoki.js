@@ -3,123 +3,52 @@ import { Link } from "react-router-dom";
 import image from "../../assets/bg-auth.jpg";
 import { FiEdit } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
+import Lottie from "react-lottie";
+import * as loadAnimation from "../../assets/lottie/73133-car-animation-front-view.json";
+import * as successAnimation from "../../assets/lottie/4022-success-animation.json";
 
 const ListJoki = () => {
   const [currentPage, setcurrentPage] = useState(1);
   const [itemsPerPage, setitemsPerPage] = useState(4);
   const [data, setData] = useState([]);
-  const [pageNumberLimit, setpageNumberLimit] = useState(5);
-  const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(5);
+  const [pageNumberLimit, setpageNumberLimit] = useState(4);
+  const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(4);
   const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
-
-  const item = [
-    {
-      userId: 1,
-      id: 1,
-      title: "delectus aut autem",
-      completed: false,
-    },
-    {
-      userId: 1,
-      id: 2,
-      title: "quis ut nam facilis et officia qui",
-      completed: false,
-    },
-    {
-      userId: 1,
-      id: 3,
-      title: "fugiat veniam minus",
-      completed: false,
-    },
-    {
-      userId: 1,
-      id: 4,
-      title: "et porro tempora",
-      completed: true,
-    },
-    {
-      userId: 1,
-      id: 5,
-      title: "laboriosam mollitia et enim quasi adipisci quia provident illum",
-      completed: false,
-    },
-    {
-      userId: 1,
-      id: 6,
-      title: "qui ullam ratione quibusdam voluptatem quia omnis",
-      completed: false,
-    },
-    {
-      userId: 1,
-      id: 7,
-      title: "illo expedita consequatur quia in",
-      completed: false,
-    },
-    {
-      userId: 1,
-      id: 8,
-      title: "quo adipisci enim quam ut ab",
-      completed: true,
-    },
-    {
-      userId: 1,
-      id: 9,
-      title: "molestiae perspiciatis ipsa",
-      completed: false,
-    },
-    {
-      userId: 1,
-      id: 10,
-      title: "illo est ratione doloremque quia maiores aut",
-      completed: true,
-    },
-    {
-      userId: 1,
-      id: 11,
-      title: "vero rerum temporibus dolor",
-      completed: true,
-    },
-    {
-      userId: 1,
-      id: 12,
-      title: "ipsa repellendus fugit nisi",
-      completed: true,
-    },
-    {
-      userId: 1,
-      id: 13,
-      title: "et doloremque nulla",
-      completed: false,
-    },
-    {
-      userId: 1,
-      id: 14,
-      title: "repellendus sunt dolores architecto voluptatum",
-      completed: true,
-    },
-    {
-      userId: 1,
-      id: 15,
-      title: "ab voluptatum amet voluptas",
-      completed: true,
-    },
-    {
-      userId: 1,
-      id: 16,
-      title: "accusamus eos facilis sint et aut voluptatem",
-      completed: true,
-    },
-    {
-      userId: 1,
-      id: 17,
-      title: "quo laboriosam deleniti aut qui",
-      completed: true,
-    },
-  ];
+  const [loading, setLoading] = useState(undefined);
+  const [completed, setCompleted] = useState(undefined);
 
   useEffect(() => {
-    setData(item);
+    setTimeout(() => {
+      fetch("https://jsonplaceholder.typicode.com/todos")
+        .then((response) => response.json())
+        .then((json) => {
+          setData(json);
+          setLoading(true);
+
+          setTimeout(() => {
+            setCompleted(true);
+          }, 1500);
+        });
+    }, 2000);
   }, []);
+
+  const defaultOptions1 = {
+    loop: true,
+    autoplay: true,
+    animationData: loadAnimation.default,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
+  const defaultOptions2 = {
+    loop: true,
+    autoplay: true,
+    animationData: successAnimation.default,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
 
   const renderData = (input) => {
     return (
@@ -188,7 +117,7 @@ const ListJoki = () => {
         <li
           key={number}
           id={number}
-          onClick={handleClick}
+          // onClick={handleClick}
           className={currentPage === number ? "active" : null}
         >
           {number}
@@ -227,32 +156,48 @@ const ListJoki = () => {
 
   return (
     <>
-      <h4 className="text-white">My Joki</h4>
-      <Link className="btn btn-secondary mb-2" to="/joki/add">
-        Add Packet Joki
-      </Link>
-      {renderData(currentItems)}
-      <ul className="pageNumbers text-white d-flex justify-content-center">
-        <li>
-          <button
-            onClick={handlePrevbtn}
-            disabled={currentPage === pages[0] ? true : false}
-          >
-            Prev
-          </button>
-        </li>
-        {pageDecrementBtn}
-        {renderPageNumbers}
-        {pageIncrementBtn}
-        <li>
-          <button
-            onClick={handleNextbtn}
-            disabled={currentPage === pages[pages.length - 1] ? true : false}
-          >
-            Next
-          </button>
-        </li>
-      </ul>
+      {!completed ? (
+        <>
+          {!loading ? (
+            <Lottie options={defaultOptions1} height={500} width={500} />
+          ) : (
+            <Lottie options={defaultOptions2} height={500} width={500} />
+          )}
+        </>
+      ) : (
+        <>
+          <h4 className="text-white">My Joki</h4>
+          <div class="d-flex justify-content-between">
+            <Link className="btn btn-secondary mb-2" to="/joki/add">
+              Add Packet Joki
+            </Link>
+            <ul className="pageNumbers text-white d-flex justify-content-center">
+              <li>
+                <button
+                  onClick={handlePrevbtn}
+                  disabled={currentPage === pages[0] ? true : false}
+                >
+                  Prev
+                </button>
+              </li>
+              {pageDecrementBtn}
+              {renderPageNumbers}
+              {pageIncrementBtn}
+              <li>
+                <button
+                  onClick={handleNextbtn}
+                  disabled={
+                    currentPage === pages[pages.length - 1] ? true : false
+                  }
+                >
+                  Next
+                </button>
+              </li>
+            </ul>
+          </div>
+          {renderData(currentItems)}
+        </>
+      )}
       <div className="pb-3" />
     </>
   );
