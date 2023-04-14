@@ -2,7 +2,7 @@
 const {
   Model
 } = require('sequelize');
-const {encrypt} = require('../helpers/bycript')
+const {encryptPW} = require('../helpers/bycript')
 module.exports = (sequelize, DataTypes) => {
   class user extends Model {
     /**
@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     hooks:{
       afterValidate: (user) => {
-        user.password = encrypt(user.password);
+        user.password = encryptPW(user.password);
       }
     },
     sequelize,

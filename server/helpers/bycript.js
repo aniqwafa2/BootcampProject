@@ -1,13 +1,13 @@
 const bcrypt = require('bcrypt');
 
-const encrypt = (pass) => {
-    return bcrypt.hashSync(pass,9);
+const encryptPW = (pass) => {
+    return bcrypt.hashSync(String(pass),9);
 }
 
-const decrypt = (pass,encryptedPass) => {
-    return bcrypt.compareSync(pass,encryptedPass);
+const decryptPW = (pass, encryptedPass) => {
+    return bcrypt.compareSync(String(pass),encryptedPass,9);
 }
 
 module.exports = {
-    encrypt, decrypt
+    encryptPW, decryptPW
 }

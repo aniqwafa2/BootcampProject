@@ -1,4 +1,6 @@
 const {user, detail_user, order, paket} = require('../models');
+const { decryptPW } = require('../helpers/bycript');
+const { tokenGenrator,tokenVerifier } = require('../helpers/token');
 
 class userController{
     static async detailUser(req, res){
@@ -22,7 +24,7 @@ class userController{
             let result = await user.create({
                 nama, username, password, role
             });
-            let result2 = await datail_user.create({
+            let result2 = await detail_user.create({
                 contact,
                 image,
                 description,
@@ -80,8 +82,11 @@ class userController{
 
     static async createOrder(req,res){
         try{
-            const userId = req.params.userId;
-            const paketId = req.params.paketId;
+            // const userId = req.params.userId;
+            // const paketId = req.params.paketId;
+            const accesstoken = req.headers.access_token
+            const userId = tokenVerifier()
+            const paketId = req.params.id;
             let result = await order.create({
                 userId,
                 paketId,
@@ -130,6 +135,29 @@ class userController{
             });
         }catch(err){
             res.status(500).json(err);
+        }
+    }
+
+    static async login(req,res){
+        try{
+            const {username, password} = req.body
+            let result = await user.findOne({
+                where: {username}
+            })
+            if(result){
+                let pass = decryptPW(password, result.password)
+                if(pass){
+                    let access_token = tokenGenrator(result);
+                    res.status(200).json(access_token);
+                }else{
+                    res.status(404).json({message:'wrong password'})
+                }
+
+            }else{
+                res.status(404).json({message:'username not found'})
+            }
+        }catch(err){
+            res.status(404).json(err);
         }
     }
 }
