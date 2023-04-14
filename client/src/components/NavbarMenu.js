@@ -1,7 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const NavbarMenu = () => {
+const NavbarMenu = (props) => {
+  const { loginStatus, loginCbHandler } = props;
+
+  const loginHandler = () => {
+    loginCbHandler(true);
+  };
+  const logoutHandler = () => {
+    localStorage.clear();
+    loginCbHandler(false);
+  };
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">

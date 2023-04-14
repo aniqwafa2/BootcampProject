@@ -1,14 +1,24 @@
 import React, { useState } from "react";
 import image from "../../assets/bg-login.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../../axios/user";
 
-const LoginPage = () => {
+const LoginPage = (props) => {
+  const { loginCbHandler } = props;
   const [form, setForm] = useState({
     username: "",
     password: "",
   });
 
-  const submitHandler = () => {};
+  const navigation = useNavigate();
+
+  const submitHandler = () => {
+    loginUser(form, result => {
+      localStorage.setItem('access_token', result.access_token)
+      loginCbHandler(true)
+    });
+    navigation("/");
+  };
 
   return (
     <div className="">
@@ -17,8 +27,8 @@ const LoginPage = () => {
           <img className="bg-auth" src={image} alt="" />
         </div>
         <div className="form-auth bg-dark p-4">
-          <Link className="no-text-decoration" to="/">
-            <h2 className="text-center no-text-decoration">Joki Game</h2>
+          <Link className="" to="/">
+            <h2 className="text-center text-white">Joki Game</h2>
           </Link>
           <h4>Login</h4>
           <form>

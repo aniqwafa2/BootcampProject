@@ -7,6 +7,7 @@ import ListJoki from "./joki/ListJoki";
 import ListOrder from "./orders/ListOrder";
 import Joki from "./joki/Joki";
 import Order from "./orders/Order";
+import AddJoki from "./joki/AddJoki";
 
 export {
   HomePage,
@@ -18,4 +19,5 @@ export {
   ListOrder,
   Joki,
   Order,
+  AddJoki
 };

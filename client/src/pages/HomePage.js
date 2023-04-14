@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import image from "../assets/mobile_legend.jpg";
 import bg_header from '../assets/bg-header'
 import { Link } from "react-router-dom";
@@ -16,7 +16,7 @@ const HomePage = () => {
     <>
       <img src={bg_header} alt="" className="bg-header" />
       {/* BsFilterSquare */}
-      <div className="container pt-4 pb-2">
+      <div className="container pt-4 pb-5">
         <div class="d-flex justify-content-between">
           <form class="search-width">
             <input
