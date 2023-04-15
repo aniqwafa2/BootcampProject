@@ -29,7 +29,7 @@ const ListJoki = () => {
             setCompleted(true);
           }, 1500);
         });
-    }, 2000);
+    }, 1500);
   }, []);
 
   const defaultOptions1 = {
@@ -59,20 +59,20 @@ const ListJoki = () => {
             return (
               <div className="col-6 mb-2 custom-card" key={index}>
                 <div className="card bg-card-joki">
-                  <div class="container">
-                    <div class="row">
-                      <div class="col-sm">
+                  <div className="container">
+                    <div className="row">
+                      <div className="col-sm">
                         <img className="card-joki" src={image} alt="" />
                       </div>
-                      <div class="col-sm">
+                      <div className="col-sm">
                         <div className="card-body">
                           <h5 className="text-white">{brand.title}</h5>
                           <p className="text-white">
                             With supporting text below as a natural lead-in to
                             additional content.
                           </p>
-                          <div class="position-absolute bottom-0 end-0 pb-2 px-2">
-                            <Link href="#" className="btn btn-primary">
+                          <div className="position-absolute bottom-0 end-0 pb-2 px-2">
+                            <Link href="#" className="btn btn-primary mx-1">
                               <FiEdit />
                             </Link>
                             <Link href="#" className="btn btn-danger">
@@ -109,7 +109,7 @@ const ListJoki = () => {
     setcurrentPage(event.target.id);
   };
 
-  console.log(currentPage);
+  // console.log(currentPage);
 
   const renderPageNumbers = pages.map((number) => {
     if (number < maxPageNumberLimit + 1 && number > minPageNumberLimit) {
@@ -158,16 +158,18 @@ const ListJoki = () => {
     <>
       {!completed ? (
         <>
-          {!loading ? (
-            <Lottie options={defaultOptions1} height={500} width={500} />
-          ) : (
-            <Lottie options={defaultOptions2} height={500} width={500} />
-          )}
+          <div className="wrap-lottie-other">
+            {!loading ? (
+              <Lottie options={defaultOptions1} height={500} width={500} />
+            ) : (
+              <Lottie options={defaultOptions2} height={500} width={500} />
+            )}
+          </div>
         </>
       ) : (
         <>
           <h4 className="text-white">My Joki</h4>
-          <div class="d-flex justify-content-between">
+          <div className="d-flex justify-content-between">
             <Link className="btn btn-secondary mb-2" to="/joki/add">
               Add Packet Joki
             </Link>

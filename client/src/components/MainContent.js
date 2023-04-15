@@ -4,6 +4,7 @@ import {
   AddJoki,
   DetailJoki,
   DetailOrder,
+  DetailUser,
   HomePage,
   Joki,
   ListJoki,
@@ -11,6 +12,7 @@ import {
   LoginPage,
   Order,
   RegisterPage,
+  User,
 } from "../pages";
 
 const MainContent = () => {
@@ -28,6 +30,9 @@ const MainContent = () => {
         <Route path="order" element={<Order></Order>}>
           <Route path="" element={<ListOrder />}></Route>
           <Route path=":id" element={<DetailOrder />}></Route>
+        </Route>
+        <Route path="user" element={<User />}>
+          <Route path="" element={<DetailUser />}></Route>
         </Route>
       </Routes>
     </div>

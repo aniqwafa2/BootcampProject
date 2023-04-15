@@ -8,6 +8,8 @@ import ListOrder from "./orders/ListOrder";
 import Joki from "./joki/Joki";
 import Order from "./orders/Order";
 import AddJoki from "./joki/AddJoki";
+import User from "./user/User";
+import DetailUser from "./user/DetailUser";
 
 export {
   HomePage,
@@ -19,5 +21,7 @@ export {
   ListOrder,
   Joki,
   Order,
-  AddJoki
+  AddJoki,
+  User,
+  DetailUser,
 };

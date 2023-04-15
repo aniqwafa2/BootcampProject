@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import image from "../../assets/bg-login.jpg";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../../axios/user";
+import { loginUser } from "../../axios/userAxios";
 
 const LoginPage = (props) => {
   const { loginCbHandler } = props;
@@ -13,11 +13,11 @@ const LoginPage = (props) => {
   const navigation = useNavigate();
 
   const submitHandler = () => {
-    loginUser(form, result => {
-      localStorage.setItem('access_token', result.access_token)
-      loginCbHandler(true)
-    });
-    navigation("/");
+    loginUser(form, (result) => {
+      localStorage.setItem("access_token", result);
+      loginCbHandler(true);
+    }).then(() => navigation("/"));
+    // setTimeout(() => {}, 1500);
   };
 
   return (
@@ -53,13 +53,22 @@ const LoginPage = (props) => {
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
               />
             </div>
-            <button
-              onClick={submitHandler}
-              type="submit"
-              className="btn btn-secondary"
-            >
-              Submit
-            </button>
+            <div className="d-flex">
+              <button
+                onClick={submitHandler}
+                type="submit"
+                className="btn btn-secondary"
+              >
+                Login User
+              </button>
+              <button
+                // onClick={submitHandler}
+                type="submit"
+                className="btn btn-secondary mx-2"
+              >
+                Login Joki
+              </button>
+            </div>
           </form>
         </div>
       </div>

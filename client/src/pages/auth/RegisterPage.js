@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import image from "../../assets/bg-register.jpg";
 import { Link, useNavigate } from "react-router-dom";
-import { registerUser } from "../../axios/user";
+import { registerUser } from "../../axios/userAxios";
 
 const RegisterPage = () => {
   const [form, setForm] = useState({
     nama: "",
     username: "",
     password: "",
-    role: "",
+    // role: "",
     contact: "",
     image: null,
     description: "",
@@ -18,7 +18,7 @@ const RegisterPage = () => {
 
   const submitHandler = () => {
     registerUser(form);
-    navigation('/')
+    navigation("/");
   };
 
   return (
@@ -33,9 +33,7 @@ const RegisterPage = () => {
         <h4>Register</h4>
         <form>
           <div className="mb-3">
-            <label className="form-label">
-              Name
-            </label>
+            <label className="form-label">Name</label>
             <input
               type="text"
               className="form-control"
@@ -43,9 +41,7 @@ const RegisterPage = () => {
             />
           </div>
           <div className="mb-3">
-            <label className="form-label">
-              Username
-            </label>
+            <label className="form-label">Username</label>
             <input
               type="text"
               className="form-control"
@@ -53,9 +49,7 @@ const RegisterPage = () => {
             />
           </div>
           <div className="mb-3">
-            <label className="form-label">
-              Contact
-            </label>
+            <label className="form-label">Contact</label>
             <input
               type="text"
               className="form-control"
@@ -63,19 +57,15 @@ const RegisterPage = () => {
             />
           </div>
           <div className="mb-3">
-            <label className="form-label">
-              Image
-            </label>
+            <label className="form-label">Image</label>
             <input
-              type="text"
+              type="file"
               className="form-control"
               onChange={(e) => setForm({ ...form, image: e.target.value })}
             />
           </div>
           <div className="mb-3">
-            <label className="form-label">
-              Description
-            </label>
+            <label className="form-label">Description</label>
             <input
               type="text"
               className="form-control"
@@ -85,16 +75,14 @@ const RegisterPage = () => {
             />
           </div>
           <div className="mb-3">
-            <label className="form-label">
-              Password
-            </label>
+            <label className="form-label">Password</label>
             <input
               type="password"
               className="form-control"
               onChange={(e) => setForm({ ...form, password: e.target.value })}
             />
           </div>
-          <div className="mb-3">
+          {/* <div className="mb-3">
             <label className="form-label">
               Role
             </label>
@@ -103,14 +91,23 @@ const RegisterPage = () => {
               className="form-control"
               onChange={(e) => setForm({ ...form, role: e.target.value })}
             />
+          </div> */}
+          <div className="d-flex">
+            <button
+              onClick={submitHandler}
+              type="submit"
+              className="btn btn-secondary"
+            >
+              Register User
+            </button>
+            <button
+              // onClick={submitHandler}
+              type="submit"
+              className="btn btn-secondary mx-2"
+            >
+              Register Joki
+            </button>
           </div>
-          <button
-            onClick={submitHandler}
-            type="submit"
-            className="btn btn-secondary"
-          >
-            Submit
-          </button>
         </form>
       </div>
     </div>

@@ -13,35 +13,12 @@
     outline-width: 1.5px;
 }
 
-.pageNumbers {
-    list-style: none;
-    display: flex;
-}
-
-.pageNumbers li {
-    padding: 2px;
-    border: 1px solid white;
-    cursor: pointer;
-}
-
-.pageNumbers li.active {
-    background-color: white;
-    color: black;
-}
-
-.pageNumbers li button {
-    background-color: transparent;
-    border: none;
-    color: white;
-    /* font-size: 1.5rem; */
-    cursor: pointer;
-}
-
-.pageNumbers li button:hover {
-    background-color: white;
-    color: black;
-}
-
-.pageNumbers li button:focus {
-    outline: none;
+.img-preview{
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 5px;
+    right: 50px;
+    margin-top: 20px;
+    border: solid white 2px;
 }
