@@ -12,6 +12,7 @@ app.use(express.urlencoded({
 
 const routes = require("./routes");
 app.use(routes);
+app.use('/uploaded', express.static('./uploaded'));
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
