@@ -72,7 +72,7 @@ const ListJoki = () => {
                             additional content.
                           </p>
                           <div className="position-absolute bottom-0 end-0 pb-2 px-2">
-                            <Link href="#" className="btn btn-primary mx-1">
+                            <Link href="#" className="btn btn-warning mx-1">
                               <FiEdit />
                             </Link>
                             <Link href="#" className="btn btn-danger">

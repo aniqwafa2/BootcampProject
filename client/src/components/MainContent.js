@@ -15,12 +15,16 @@ import {
   User,
 } from "../pages";
 
-const MainContent = () => {
+const MainContent = (props) => {
+  const { loginCbHandler } = props;
   return (
     <div className="bg-dark">
       <Routes>
         <Route path="" element={<HomePage />}></Route>
-        <Route path="login" element={<LoginPage />}></Route>
+        <Route
+          path="login"
+          element={<LoginPage loginCbHandler={loginCbHandler} />}
+        ></Route>
         <Route path="register" element={<RegisterPage />}></Route>
         <Route path="joki" element={<Joki />}>
           <Route path="" element={<ListJoki />}></Route>

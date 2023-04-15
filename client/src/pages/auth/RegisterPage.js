@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import image from "../../assets/bg-register.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../../axios/userAxios";
+import { registerJoki } from "../../axios/jokiAxios";
 
 const RegisterPage = () => {
   const [form, setForm] = useState({
@@ -20,6 +21,11 @@ const RegisterPage = () => {
     registerUser(form);
     navigation("/");
   };
+
+  const submitHandlerJoki = () => {
+    registerJoki(form);
+    navigation("/")
+  }
 
   return (
     <div className="">
@@ -61,7 +67,7 @@ const RegisterPage = () => {
             <input
               type="file"
               className="form-control"
-              onChange={(e) => setForm({ ...form, image: e.target.value })}
+              onChange={(e) => setForm({ ...form, image: e.target.files[0] })}
             />
           </div>
           <div className="mb-3">
@@ -101,7 +107,7 @@ const RegisterPage = () => {
               Register User
             </button>
             <button
-              // onClick={submitHandler}
+              onClick={submitHandlerJoki}
               type="submit"
               className="btn btn-secondary mx-2"
             >

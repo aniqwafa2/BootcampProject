@@ -1,30 +1,24 @@
 import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 // import {  } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const NavbarMenu = (props) => {
-  const [loginStatus, setLoginStatus] = useState(false);
-
-  useEffect(() => {
-    if (localStorage.getItem("access_token")) {
-      setLoginStatus(true);
-    } else {
-      setLoginStatus(false);
-    }
-  }, [loginStatus]);
+  const { loginStatus, loginCbHandler } = props;
 
   console.log("Login APP Status" + loginStatus);
 
-  const loginCbHandler = (result) => {
-    setLoginStatus(result);
-  };
+  // const loginCbHandler = (result) => {
+  //   setLoginStatus(result);
+  // };
 
   const navigation = useNavigate();
 
   const logoutHandler = () => {
     localStorage.clear();
     loginCbHandler(false);
-    navigation("")
+    Swal.fire("Logout", "logout successful", "success");
+    navigation("/")
   };
 
   return (
@@ -68,7 +62,6 @@ const NavbarMenu = (props) => {
                     <Link
                       onClick={() => logoutHandler()}
                       className="nav-link"
-                      // to="/user"
                     >
                       Logout
                     </Link>

@@ -9,6 +9,17 @@ function App() {
   const [menu, setMenu] = useState([]);
   const [footer, setFooter] = useState(null);
   const location = useLocation();
+  const [loginStatus, setLoginStatus] = useState(false);
+  const loginCbHandler = (result) => {
+    setLoginStatus(result);
+  };
+  useState(() => {
+    if (localStorage.getItem("access_token")) {
+      setLoginStatus(true);
+    } else {
+      setLoginStatus(false);
+    }
+  });
 
   useEffect(() => {
     if (
@@ -19,7 +30,7 @@ function App() {
       setFooter(null);
     } else {
       setMenu(
-        <NavbarMenu />
+        <NavbarMenu loginStatus={loginStatus} loginCbHandler={loginCbHandler} />
       );
       setFooter(<Footer />);
     }
@@ -28,7 +39,7 @@ function App() {
   return (
     <div>
       {menu}
-      <MainContent />
+      <MainContent loginCbHandler={loginCbHandler} />
       {footer}
     </div>
   );

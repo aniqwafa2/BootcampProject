@@ -2,8 +2,9 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const URL = "http://localhost:3000/user";
+const token = localStorage.getItem("access_token");
 
-const loginJoki = async (user, cb) => {
+const loginJoki = async (user) => {
   try {
     let result = await axios({
       method: "POST",
@@ -11,8 +12,12 @@ const loginJoki = async (user, cb) => {
       data: user,
     });
 
+    const access_token = result.data
+    localStorage.setItem('access_token', access_token)
+    localStorage.setItem('role', 'user')
+
     Swal.fire("Berhasil Login", "Login Success", "success");
-    cb(result.data);
+    // cb(result.data);
   } catch (error) {
     console.log(error);
   }
@@ -24,6 +29,7 @@ const registerJoki = async (user) => {
       method: "POST",
       url: URL + "/create",
       data: user,
+      headers: { "Content-Type": "multipart/form-data" },
     });
     Swal.fire("Berhasil Register", "Register Success", "success");
     // cb(register.data);
@@ -38,6 +44,9 @@ const detailJoki = async (cb) => {
     let result = await axios({
       method: "GET",
       url: URL + "/profile",
+      headers: {
+        "access_token": token,
+      },
     });
 
     cb(result.data);
@@ -52,6 +61,9 @@ const editJoki = async (user) => {
       method: "PUT",
       url: URL + "/edit",
       data: user,
+      headers: {
+        "access_token": token,
+      },
     });
     Swal.fire("Berhasil Register", "Register Success", "success");
   } catch (error) {
@@ -64,6 +76,9 @@ const listPaket = async (cb) => {
     let result = await axios({
       method: "GET",
       url: URL + "/order",
+      headers: {
+        "access_token": token,
+      },
     });
 
     cb(result.data);
@@ -77,6 +92,9 @@ const detailPaket = async (id, cb) => {
     let result = await axios({
       method: "GET",
       url: URL + "/detailpaket/" + id,
+      headers: {
+        "access_token": token,
+      },
     });
 
     cb(result.data);
@@ -90,6 +108,9 @@ const paketOrdered = async (id, cb) => {
     let result = await axios({
       method: "GET",
       url: URL + "/paketordered/" + id,
+      headers: {
+        "access_token": token,
+      },
     });
 
     cb(result.data);
@@ -103,6 +124,9 @@ const createPaket = async (paket) => {
     let result = await axios({
       method: "GET",
       url: URL + "/createpaket",
+      headers: {
+        "access_token": token,
+      },
     });
     Swal.fire("Berhasil Register", "Register Success", "success");
   } catch (error) {

@@ -27,8 +27,7 @@ const DetailUser = () => {
   };
 
   const getUserData = () => {
-    const token = localStorage.getItem("access_token");
-    detailUser(token, (result) => {
+    detailUser((result) => {
       setForm({
         nama: result.nama,
         username: result.username,
