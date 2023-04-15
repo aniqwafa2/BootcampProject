@@ -1,9 +1,11 @@
-const {user} = require('../models');
+const {user, paket,order,detail_user} = require('../models');
+const { tokenGenrator,tokenVerifier } = require('../helpers/token');
 
 class jokiController{
-    static async detailUser(req, res){
+    static async detailJoki(req, res){
         try{
-            const id = req.params.id;
+            const access_token = req.headers.access_token;
+            const id = tokenVerifier(access_token).id;
             let result = await user.findOne({
                 where: {id}
             },{
@@ -75,6 +77,139 @@ class jokiController{
             }
         }catch(err){
             res.status(500).json(err);
+        }
+    }
+
+    static async login(req,res){
+        try{
+            const {username, password} = req.body
+            let result = await user.findOne({
+                where: {username}
+            })
+            if(result){
+                let pass = decryptPW(password, result.password)
+                if(pass){
+                    let access_token = tokenGenrator(result);
+                    res.status(200).json(access_token);
+                }else{
+                    res.status(404).json({message:'wrong password'})
+                }
+
+            }else{
+                res.status(404).json({message:'username not found'})
+            }
+        }catch(err){
+            res.status(404).json(err);
+        }
+    }
+
+    static async createPaket(req,res){
+        try{
+            const{description, image, price} = req.body;
+            const access_token = req.headers.access_token;
+            const userId = tokenVerifier(access_token).id;
+            if(!req.file){
+                let result = await paket.create({
+                    description, 
+                    image:"",
+                    userId, 
+                    price
+                })
+            }else{
+                let result = await paket.create({
+                    description, 
+                    image: req.file.filename,
+                    userId, 
+                    price
+                })
+            }
+            res.status(201).json(result);
+        }catch(err){
+            res.status(500).json(err);
+        }
+    }
+
+    static async editPaket(req,res){
+        try{
+            const id = req.params.id;
+            const{description, image, price} = req.body;
+            if(!re.file){
+                let result = await paket.update({
+                    description, 
+                    image, 
+                    price
+                },{
+                    where:{id}
+                })
+            }else{
+                let result = await paket.update({
+                    description, 
+                    image: req.file.filename, 
+                    price
+                },{
+                    where:{id}
+                })
+            }
+            res.status(201).json(result);
+        }catch(err){
+            res.status(404).json(err);
+        }
+    }
+
+    static async deletePaket(req,res){
+        try{
+            const id = req.params.id;
+            let result = paket.destroy({
+                where:{id}
+            })
+        }catch(err){
+            res.status(404).json(err);
+        }
+    }
+
+    static async listPaket(req,res){
+        try{
+            const access_token = req.headers.access_token;
+            const userId = tokenVerifier(access_token).id;
+            let result = await paket.findAll({
+                where:{userId}
+            })
+            res.status(200).json(result)
+        }catch(err){
+            res.status(404).json(err);
+        }
+    }
+
+    static async detailPaket(req,res){
+        try{
+            const id = req.params.id
+            let result = await paket.findOne({
+                where:{id}
+            })
+            res.status(200).json(result)
+        }catch(err){
+            res.status(404).json(err);
+        }
+    }
+
+    static async listPaketOrdered(req,res){
+        try{
+            // const access_token = req.headers.access_token;
+            // const userId = tokenVerifier(access_token).id;
+            let userId = req.params.id;
+            let result = await order.findAll({
+                include:[
+                    {model: user},
+                    {model: paket,
+                        where:{
+                            userId
+                        }
+                    }
+                ]
+            })
+            res.status(200).json(result)
+        }catch(err){
+            res.status(404).json(err);
         }
     }
 }

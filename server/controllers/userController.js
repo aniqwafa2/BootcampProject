@@ -5,7 +5,8 @@ const { tokenGenrator,tokenVerifier } = require('../helpers/token');
 class userController{
     static async detailUser(req, res){
         try{
-            const id = req.params.id;
+            const access_token = req.headers.access_token;
+            const id = tokenVerifier(access_token).id;
             let result = await user.findOne({
                 where: {id}
             },{
@@ -19,17 +20,26 @@ class userController{
 
     static async create(req,res){
         try{
-            const {nama, username, password, contact, image, description} = req.body;
+            const {nama, username, password, contact, description} = req.body;
             const role = "users"
             let result = await user.create({
                 nama, username, password, role
             });
-            let result2 = await detail_user.create({
-                contact,
-                image,
-                description,
-                userId : result.id
-            })
+            if(!req.file){
+                let result2 = await detail_user.create({
+                    contact,
+                    image: "",
+                    description,
+                    userId : result.id
+                })
+            }else{
+                let result2 = await detail_user.create({
+                    contact,
+                    image: req.file.originalname,
+                    description,
+                    userId : result.id
+                })
+            }
             res.status(201).json(result);
         }catch(err){
             res.status(500).json(err);
@@ -38,7 +48,7 @@ class userController{
 
     static async update(req,res){
         try{
-            const {nama, username, password, contact, image, description} = req.body;
+            const {nama, username, password, contact, description} = req.body;
             const id = req.params.id;
             const role = "users";
             let result = await user.update({
@@ -46,15 +56,26 @@ class userController{
             },{
                 where: {id}
             })
-            let result2 = await user_detail.update({
-                contact,
-                image,
-                description
-            },{
-                where:{
-                    userId: id
-                }
-            })
+            if(!req.file){
+                let result2 = await user_detail.update({
+                    contact,
+                    description
+                },{
+                    where:{
+                        userId: id
+                    }
+                })
+            }else{
+                let result2 = await user_detail.update({
+                    contact,
+                    image : req.file.filename,
+                    description
+                },{
+                    where:{
+                        userId: id
+                    }
+                })
+            }
         }catch(err){
             res.status(500).json(err);
         }
@@ -82,10 +103,8 @@ class userController{
 
     static async createOrder(req,res){
         try{
-            // const userId = req.params.userId;
-            // const paketId = req.params.paketId;
-            const accesstoken = req.headers.access_token
-            const userId = tokenVerifier()
+            const access_token = req.headers.access_token;
+            const userId = tokenVerifier(access_token).id;
             const paketId = req.params.id;
             let result = await order.create({
                 userId,
@@ -101,7 +120,9 @@ class userController{
 
     static async listOrder(req,res){
         try{
-            const userId = req.params.userId
+            const access_token = req.headers.access_token;
+            const userId = tokenVerifier(access_token).id;
+            //const userId = req.params.userId
             let result = await order.findAll({
                 where:{userId}
             },{
@@ -158,6 +179,19 @@ class userController{
             }
         }catch(err){
             res.status(404).json(err);
+        }
+    }
+
+    static async upload(req,res){
+        try{
+            if(!req.file){
+                console.log('no image')
+            }else{
+                console.log(req.file.filename)
+            }
+            //res.send({message:'no file'})
+        }catch(err){
+            res.send(err);
         }
     }
 }
