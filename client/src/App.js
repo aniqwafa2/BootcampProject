@@ -18,7 +18,9 @@ function App() {
       setMenu(null);
       setFooter(null);
     } else {
-      setMenu(<NavbarMenu />);
+      setMenu(
+        <NavbarMenu />
+      );
       setFooter(<Footer />);
     }
   }, [location.pathname]);
