@@ -7,8 +7,7 @@ class jokiController{
             const access_token = req.headers.access_token;
             const id = tokenVerifier(access_token).id;
             let result = await user.findOne({
-                where: {id}
-            },{
+                where: {id},
                 include:detail_user
             })
             res.status(200).json(result);
@@ -19,17 +18,27 @@ class jokiController{
 
     static async create(req,res){
         try{
-            const {nama, username, password, contact, image, description} = req.body;
+            const {nama, username, password, contact,  description} = req.body;
             const role = "jokis"
             let result = await user.create({
                 nama, username, password, role
             });
-            let result2 = await detail_user.create({
-                contact,
-                image,
-                description,
-                userId : result.id
-            })
+            if(!req.file){
+                let result2 = await detail_user.create({
+                    contact,
+                    image:"",
+                    description,
+                    userId : result.id
+                })
+            }else{
+                let result2 = await detail_user.create({
+                    contact,
+                    image: req.file.filename,
+                    description,
+                    userId : result.id
+                })
+            }
+            
             res.status(201).json(result);
         }catch(err){
             res.status(500).json(err);
@@ -38,23 +47,35 @@ class jokiController{
 
     static async update(req,res){
         try{
-            const {nama, username, password, contact, image, description} = req.body;
+            const {nama, password, contact,  description} = req.body;
             const id = req.params.id;
             const role = "jokis";
             let result = await user.update({
-                nama, username, password, role
+                nama, password, role
             },{
                 where: {id}
             })
-            let result2 = await user_detail.update({
-                contact,
-                image,
-                description
-            },{
-                where:{
-                    userId: id
-                }
-            })
+            if(!req.file){
+                let result2 = await user_detail.update({
+                    contact,
+                    description
+                },{
+                    where:{
+                        userId: id
+                    }
+                })
+            }else{
+                let result2 = await user_detail.update({
+                    contact,
+                    image: req.file.filename,
+                    description
+                },{
+                    where:{
+                        userId: id
+                    }
+                })
+            }
+            
         }catch(err){
             res.status(500).json(err);
         }
@@ -105,7 +126,7 @@ class jokiController{
 
     static async createPaket(req,res){
         try{
-            const{description, image, price} = req.body;
+            const{description, price} = req.body;
             const access_token = req.headers.access_token;
             const userId = tokenVerifier(access_token).id;
             if(!req.file){
@@ -133,7 +154,7 @@ class jokiController{
         try{
             const id = req.params.id;
             const{description, image, price} = req.body;
-            if(!re.file){
+            if(!req.file){
                 let result = await paket.update({
                     description, 
                     image, 
@@ -162,6 +183,15 @@ class jokiController{
             let result = paket.destroy({
                 where:{id}
             })
+            if(result === 1){
+                res.status(200).json({
+                    message:`Paket id: ${id} was deleted`
+                });
+            }else{
+                res.status(404).json({
+                    message:`Paket id: ${id} not found`
+                })
+            }
         }catch(err){
             res.status(404).json(err);
         }
@@ -194,9 +224,9 @@ class jokiController{
 
     static async listPaketOrdered(req,res){
         try{
-            // const access_token = req.headers.access_token;
-            // const userId = tokenVerifier(access_token).id;
-            let userId = req.params.id;
+            const access_token = req.headers.access_token;
+            const userId = tokenVerifier(access_token).id;
+            //let userId = req.params.id;
             let result = await order.findAll({
                 include:[
                     {model: user},

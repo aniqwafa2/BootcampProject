@@ -18,7 +18,12 @@ module.exports = (sequelize, DataTypes) => {
   paket.init({
     description: DataTypes.TEXT,
     image: DataTypes.STRING,
-    userId: DataTypes.INTEGER,
+    userId: {
+      type:DataTypes.INTEGER,
+      validate: {
+        notEmpty: true
+        }
+    },
     price: DataTypes.INTEGER
   }, {
     sequelize,
