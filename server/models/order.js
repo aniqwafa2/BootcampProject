@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      order.belongsTo(models.paket)
+      order.belongsTo(models.user)
     }
   }
   order.init({
