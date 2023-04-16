@@ -113,7 +113,7 @@ class userController{
                 status: false,
                 rating: 0
             })
-            res.status(201).json({});
+            res.status(201).json({message: "berhasil create order"});
         }catch(err){
             res.status(500).json(err);
         }

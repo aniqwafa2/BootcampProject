@@ -10,12 +10,21 @@ function App() {
   const [footer, setFooter] = useState(null);
   const location = useLocation();
   const [loginStatus, setLoginStatus] = useState(false);
+  const [role, setRole] = useState("")
   const loginCbHandler = (result) => {
     setLoginStatus(result);
   };
+  const roleCbHandler = (result) => {
+    setRole(result)
+  }
   useState(() => {
     if (localStorage.getItem("access_token")) {
       setLoginStatus(true);
+      if (localStorage.getItem("role") === "user") {
+        setRole("user")
+      } else {
+        setRole("joki")
+      }
     } else {
       setLoginStatus(false);
     }

@@ -6,6 +6,7 @@ import { AiFillFilter } from "react-icons/ai";
 import Lottie from "react-lottie";
 import * as loadAnimation from "../assets/lottie/73133-car-animation-front-view.json";
 import * as successAnimation from "../assets/lottie/4022-success-animation.json";
+import { allListPaket } from "../axios/userAxios";
 
 const HomePage = () => {
   const [currentPage, setcurrentPage] = useState(1);
@@ -16,20 +17,17 @@ const HomePage = () => {
   const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
   const [loading, setLoading] = useState(undefined);
   const [completed, setCompleted] = useState(undefined);
-  const item = [1, 2, 3, 4, 5, 6, 7, 8, 9, 23, 4, 453];
 
   useEffect(() => {
     setTimeout(() => {
-      fetch("https://jsonplaceholder.typicode.com/todos")
-        .then((response) => response.json())
-        .then((json) => {
-          setData(json);
-          setLoading(true);
-          setTimeout(() => {
-            setCompleted(true);
-          }, 1500);
-        });
-    }, 1500);
+      allListPaket((result) => {
+        setLoading(true);
+        setData(result);
+      });
+      setTimeout(() => {
+        setCompleted(true);
+      }, 500);
+    }, 700);
   }, []);
 
   const defaultOptions1 = {
@@ -54,22 +52,30 @@ const HomePage = () => {
     return (
       <div className="row row-cols-2 row-cols-lg-5 g-2 g-lg-2">
         {input.length > 0 ? (
-          input.map((brand) => {
+          input.map((item) => {
             // const { id, name, since_year, image } = brand;
             return (
               <div className="col">
-                <Link to="/joki">
+                <Link to={`/joki/${item.id}`}>
                   <div className="border rounded grid-hover card-list">
                     <div className="p-1">
                       <img
                         className="rounded img-wrap-list mx-auto d-block"
-                        src={image}
+                        src={`http://localhost:3000/uploaded/${item.image}`}
                         alt=""
                       />
-                      <div className="fs-2 title-wrap">{brand.title}</div>
-                      <hr className="divider" />
-                      <div className="text-description-time">Description</div>
-                      <br />
+                      <div className="p-1">
+                        <div className="fs-3 title-wrap">Paket {item.id}</div>
+                        <hr className="divider" />
+                        <div className="text-description-time">
+                          {item.description}
+                        </div>
+                        <div className="d-flex justify-content-between">
+                          <div>{item.price}</div>
+                          <div>{item.user.nama}</div>
+                        </div>
+                      </div>
+                      {/* <br /> */}
                       {/* <div class="btn-group">
                         <AiOutlineMenu
                           type="button"

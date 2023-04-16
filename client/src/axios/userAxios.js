@@ -12,9 +12,9 @@ const loginUser = async (user) => {
       data: user,
     });
 
-    const access_token = result.data
-    localStorage.setItem('access_token', access_token)
-    localStorage.setItem('role', 'user')
+    const access_token = result.data;
+    localStorage.setItem("access_token", access_token);
+    localStorage.setItem("role", "user");
 
     Swal.fire("Berhasil Login", "Login Success", "success");
     // cb(result.data);
@@ -45,11 +45,11 @@ const detailUser = async (cb) => {
       method: "GET",
       url: URL + "/profile",
       headers: {
-        "access_token": token,
+        access_token: token,
       },
     });
 
-    console.log(result.data)
+    console.log(result.data);
     cb(result.data);
   } catch (error) {
     console.log(error);
@@ -62,7 +62,7 @@ const listOrder = async (cb) => {
       method: "GET",
       url: URL + "/order",
       headers: {
-        "access_token": token,
+        access_token: token,
       },
     });
     cb(result.data);
@@ -77,7 +77,7 @@ const detailOrder = async (id, cb) => {
       method: "GET",
       url: URL + "/order/" + id,
       headers: {
-        "access_token": token,
+        access_token: token,
       },
     });
     cb(result.data);
@@ -92,42 +92,57 @@ const deleteOrder = async (id) => {
       method: "DELETE",
       url: URL + "/order/" + id,
       headers: {
-        "access_token": token,
+        access_token: token,
       },
     });
+    Swal.fire("Berhasil Delete", `Delete order ${id} Success`, "success");
   } catch (error) {
     console.log(error);
   }
 };
 
 const editUser = async (user) => {
+  const headers = {
+    access_token: token,
+    "Content-Type": "multipart/form-data",
+  };
   try {
     let result = await axios({
       method: "PUT",
       url: URL + "/edit",
       data: user,
-      headers: {
-        "access_token": token,
-      },
+      headers: headers,
     });
     console.log(result);
-    Swal.fire("Berhasil Register", "Register Success", "success");
+    Swal.fire("Berhasil Edit Profile", "Edit Profile Success", "success");
   } catch (error) {
     console.log(error);
   }
 };
 
-const addOrder = async (id, user) => {
+const addOrder = async (id) => {
   try {
     let result = await axios({
       method: "POST",
       url: URL + "/createorder/" + id,
-      data: user,
       headers: {
-        "access_token": token,
+        access_token: token,
       },
     });
-    Swal.fire("Berhasil Register", "Register Success", "success");
+    console.log(result)
+    Swal.fire("Berhasil Order", "Order Success", "success");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const allListPaket = async (cb) => {
+  try {
+    let result = await axios({
+      method: "GET",
+      url: URL + "/listpaket",
+    });
+    cb(result.data);
   } catch (error) {
     console.log(error);
   }
@@ -142,4 +157,5 @@ export {
   deleteOrder,
   editUser,
   addOrder,
+  allListPaket,
 };

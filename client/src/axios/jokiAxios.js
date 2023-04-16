@@ -1,7 +1,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const URL = "http://localhost:3000/user";
+const URL = "http://localhost:3000/joki";
 const token = localStorage.getItem("access_token");
 
 const loginJoki = async (user) => {
@@ -12,9 +12,9 @@ const loginJoki = async (user) => {
       data: user,
     });
 
-    const access_token = result.data
-    localStorage.setItem('access_token', access_token)
-    localStorage.setItem('role', 'user')
+    const access_token = result.data;
+    localStorage.setItem("access_token", access_token);
+    localStorage.setItem("role", "user");
 
     Swal.fire("Berhasil Login", "Login Success", "success");
     // cb(result.data);
@@ -45,7 +45,7 @@ const detailJoki = async (cb) => {
       method: "GET",
       url: URL + "/profile",
       headers: {
-        "access_token": token,
+        access_token: token,
       },
     });
 
@@ -62,7 +62,7 @@ const editJoki = async (user) => {
       url: URL + "/edit",
       data: user,
       headers: {
-        "access_token": token,
+        access_token: token,
       },
     });
     Swal.fire("Berhasil Register", "Register Success", "success");
@@ -75,9 +75,9 @@ const listPaket = async (cb) => {
   try {
     let result = await axios({
       method: "GET",
-      url: URL + "/order",
+      url: URL + "/paket",
       headers: {
-        "access_token": token,
+        access_token: token,
       },
     });
 
@@ -93,7 +93,7 @@ const detailPaket = async (id, cb) => {
       method: "GET",
       url: URL + "/detailpaket/" + id,
       headers: {
-        "access_token": token,
+        access_token: token,
       },
     });
 
@@ -109,7 +109,7 @@ const paketOrdered = async (id, cb) => {
       method: "GET",
       url: URL + "/paketordered/" + id,
       headers: {
-        "access_token": token,
+        access_token: token,
       },
     });
 
@@ -120,15 +120,35 @@ const paketOrdered = async (id, cb) => {
 };
 
 const createPaket = async (paket) => {
+  const headers = {
+    access_token: token,
+    "Content-Type": "multipart/form-data",
+  };
   try {
     let result = await axios({
-      method: "GET",
+      method: "POST",
       url: URL + "/createpaket",
+      data: paket,
+      headers: headers,
+    });
+    console.log(result);
+    Swal.fire("Berhasil Menambah Paket Order", "Add Paket Success", "success");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const deletePaket = async (id) => {
+  try {
+    let result = await axios({
+      method: "DELETE",
+      url: URL + "/paket/" + id,
       headers: {
-        "access_token": token,
+        access_token: token,
       },
     });
-    Swal.fire("Berhasil Register", "Register Success", "success");
+    console.log(result);
+    Swal.fire("Berhasil Delete Paket Order", "Delete Paket Success", "success");
   } catch (error) {
     console.log(error);
   }
@@ -143,4 +163,5 @@ export {
   detailPaket,
   paketOrdered,
   createPaket,
+  deletePaket
 };

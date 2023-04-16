@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { FiEdit } from "react-icons/fi";
+import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineDelete } from "react-icons/ai";
 import Lottie from "react-lottie";
 import * as loadAnimation from "../../assets/lottie/73133-car-animation-front-view.json";
 import * as successAnimation from "../../assets/lottie/4022-success-animation.json";
+import { deleteOrder, listOrder } from "../../axios/userAxios";
 
 const ListOrder = () => {
   const [order, setOrder] = useState("");
@@ -24,17 +24,14 @@ const ListOrder = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      fetch("https://jsonplaceholder.typicode.com/todos")
-        .then((response) => response.json())
-        .then((json) => {
-          setData(json);
-          setLoading(true);
-
-          setTimeout(() => {
-            setCompleted(true);
-          }, 1500);
-        });
-    }, 1500);
+      listOrder((result) => {
+        setLoading(true);
+        setData(result);
+      });
+      setTimeout(() => {
+        setCompleted(true);
+      }, 500);
+    }, 700);
   }, []);
 
   const defaultOptions1 = {
@@ -55,6 +52,12 @@ const ListOrder = () => {
     },
   };
 
+  const navigate = useNavigate();
+
+  const deleteHandler = (id) =>{
+    deleteOrder(id)
+  }
+
   const renderData = (input) => {
     return (
       <>
@@ -74,6 +77,7 @@ const ListOrder = () => {
           </ul>
           <div className="list-group mx-3">
             {input.map((item) => {
+              const { paket, rating, status } = item;
               return (
                 <>
                   <Link
@@ -81,19 +85,16 @@ const ListOrder = () => {
                     className="list-group-item list-group-item-action flex-column align-items-start pb-5"
                   >
                     <div className="d-flex w-100 justify-content-between">
-                      <h5 className="mb-1">Paket Joki {item.id}</h5>
+                      <h5 className="mb-1">Paket Joki {paket.id}</h5>
                       <small>3 days ago</small>
                     </div>
                     <p className="mb-1">
                       Donec id elit non mi porta gravida at eget metus. Maecenas
                       sed diam eget risus varius blandit.
                     </p>
-                    <small>Rating</small>
+                    <small>Rating {rating}</small>
                     <div className="position-absolute bottom-0 end-0 pb-2 px-2">
-                      <Link href="#" className="btn btn-warning mx-1">
-                        <FiEdit />
-                      </Link>
-                      <Link href="#" className="btn btn-danger">
+                      <Link onClick={()=>deleteHandler()} className="btn btn-danger">
                         <AiOutlineDelete />
                       </Link>
                     </div>

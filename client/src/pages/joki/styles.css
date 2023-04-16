@@ -13,7 +13,7 @@
     outline-width: 1.5px;
 }
 
-.img-preview{
+.img-preview {
     position: absolute;
     width: 300px;
     height: 300px;
@@ -21,4 +21,13 @@
     right: 50px;
     margin-top: 20px;
     border: solid white 2px;
+}
+
+.wrap-content-not-full {
+    min-height: 65vh;
+}
+
+.detail-image{
+    max-height: 30rem;
+    object-fit: cover;
 }

@@ -1,4 +1,5 @@
 const {user, paket,order,detail_user} = require('../models');
+const { decryptPW } = require('../helpers/bycript');
 const { tokenGenrator,tokenVerifier } = require('../helpers/token');
 
 class jokiController{
@@ -129,15 +130,16 @@ class jokiController{
             const{description, price} = req.body;
             const access_token = req.headers.access_token;
             const userId = tokenVerifier(access_token).id;
+            let result
             if(!req.file){
-                let result = await paket.create({
+                result = await paket.create({
                     description, 
                     image:"",
                     userId, 
                     price
                 })
             }else{
-                let result = await paket.create({
+                result = await paket.create({
                     description, 
                     image: req.file.filename,
                     userId, 

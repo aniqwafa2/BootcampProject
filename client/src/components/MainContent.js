@@ -5,6 +5,7 @@ import {
   DetailJoki,
   DetailOrder,
   DetailUser,
+  EditJoki,
   HomePage,
   Joki,
   ListJoki,
@@ -29,7 +30,8 @@ const MainContent = (props) => {
         <Route path="joki" element={<Joki />}>
           <Route path="" element={<ListJoki />}></Route>
           <Route path="add" element={<AddJoki />}></Route>
-          <Route path="" element={<DetailJoki />}></Route>
+          <Route path="edit/:id" element={<EditJoki />}></Route>
+          <Route path=":id" element={<DetailJoki />}></Route>
         </Route>
         <Route path="order" element={<Order></Order>}>
           <Route path="" element={<ListOrder />}></Route>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { detailUser } from "../../axios/userAxios";
+import { detailUser, editUser } from "../../axios/userAxios";
+import { useNavigate } from "react-router-dom";
 
 const DetailUser = () => {
   const imageMimeType = /image\/(png|jpg|jpeg)/i;
@@ -31,15 +32,16 @@ const DetailUser = () => {
       setForm({
         nama: result.nama,
         username: result.username,
-        contact: result.contact,
-        description: result.description,
-        role: result.role
+        contact: result.detail_user.contact,
+        description: result.detail_user.description,
+        image: result.detail_user.image,
+        role: result.role,
       });
     });
   };
 
   useEffect(() => {
-    getUserData()
+    getUserData();
   }, []);
 
   useEffect(() => {
@@ -71,7 +73,12 @@ const DetailUser = () => {
     }
   };
 
-  const submitUpdate = () => {};
+  const navigate = useNavigate();
+
+  const submitUpdate = () => {
+    editUser(form);
+    navigate(0);
+  };
 
   return (
     <>

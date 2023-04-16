@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import image from "../../assets/bg-auth.jpg";
+import { Link, useNavigate } from "react-router-dom";
 import { FiEdit } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 import Lottie from "react-lottie";
 import * as loadAnimation from "../../assets/lottie/73133-car-animation-front-view.json";
 import * as successAnimation from "../../assets/lottie/4022-success-animation.json";
+import { deletePaket, listPaket } from "../../axios/jokiAxios";
 
 const ListJoki = () => {
   const [currentPage, setcurrentPage] = useState(1);
@@ -16,20 +16,18 @@ const ListJoki = () => {
   const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
   const [loading, setLoading] = useState(undefined);
   const [completed, setCompleted] = useState(undefined);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setTimeout(() => {
-      fetch("https://jsonplaceholder.typicode.com/todos")
-        .then((response) => response.json())
-        .then((json) => {
-          setData(json);
-          setLoading(true);
-
-          setTimeout(() => {
-            setCompleted(true);
-          }, 1500);
-        });
-    }, 1500);
+      listPaket((result) => {
+        setLoading(true);
+        setData(result);
+      });
+      setTimeout(() => {
+        setCompleted(true);
+      }, 500);
+    }, 700);
   }, []);
 
   const defaultOptions1 = {
@@ -50,11 +48,16 @@ const ListJoki = () => {
     },
   };
 
+  const deletehandler = id => {
+    deletePaket(id)
+    navigate(0)
+  }
+
   const renderData = (input) => {
     return (
-      <div className="row">
+      <div className="row wrap-content-not-full">
         {input.length > 0 ? (
-          input.map((brand, index) => {
+          input.map((item, index) => {
             // const { id, name, since_year, image } = brand;
             return (
               <div className="col-6 mb-2 custom-card" key={index}>
@@ -62,20 +65,22 @@ const ListJoki = () => {
                   <div className="container">
                     <div className="row">
                       <div className="col-sm">
-                        <img className="card-joki" src={image} alt="" />
+                        <img className="card-joki" src={`http://localhost:3000/uploaded/${item.image}`} alt="" />
                       </div>
                       <div className="col-sm">
                         <div className="card-body">
-                          <h5 className="text-white">{brand.title}</h5>
+                          <h5 className="text-white">Paket {item.id}</h5>
                           <p className="text-white">
-                            With supporting text below as a natural lead-in to
-                            additional content.
+                            {item.description}
+                          </p>
+                          <p className="text-white bottom-0 start-0">
+                            Rp. {item.price}
                           </p>
                           <div className="position-absolute bottom-0 end-0 pb-2 px-2">
-                            <Link href="#" className="btn btn-warning mx-1">
+                            <Link to={`/joki/edit/${item.id}`} className="btn btn-warning mx-1">
                               <FiEdit />
                             </Link>
-                            <Link href="#" className="btn btn-danger">
+                            <Link onClick={()=>deletehandler(item.id)} className="btn btn-danger">
                               <AiOutlineDelete />
                             </Link>
                           </div>
