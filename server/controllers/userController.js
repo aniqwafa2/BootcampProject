@@ -7,10 +7,11 @@ class userController{
         try{
             const access_token = req.headers.access_token;
             const id = tokenVerifier(access_token).id;
+            //const id = req.params.id;
             let result = await user.findOne({
-                where: {id}
-            },{
+                where: {id},
                 include:detail_user
+
             })
             res.status(200).json(result);
         }catch(err){
@@ -48,7 +49,7 @@ class userController{
 
     static async update(req,res){
         try{
-            const {nama, username, password, contact, description} = req.body;
+            const {nama, password, contact, description} = req.body;
             const id = req.params.id;
             const role = "users";
             let result = await user.update({
@@ -124,9 +125,8 @@ class userController{
             const userId = tokenVerifier(access_token).id;
             //const userId = req.params.userId
             let result = await order.findAll({
-                where:{userId}
-            },{
-                include:{all:true, nested:true}
+                where:{userId},
+                include:{model:paket, include:user}
             })
             res.status(200).json(result);
         }catch(err){
@@ -138,9 +138,8 @@ class userController{
         try{
             const id = req.params.id;
             let result = await order.findOne({
-                where:{id}
-            },{
-                include:{all:true, nested:true}
+                where:{id},
+                include:{model:paket, include:user}
             })
             res.status(200).json(result);
         }catch(err){
@@ -154,6 +153,15 @@ class userController{
             let result = await order.destroy({
                 where:{id}
             });
+            if(result === 1){
+                res.status(200).json({
+                    message:`Order id: ${id} was deleted`
+                });
+            }else{
+                res.status(404).json({
+                    message:`Order id: ${id} not found`
+                })
+            }
         }catch(err){
             res.status(500).json(err);
         }
@@ -179,6 +187,17 @@ class userController{
             }
         }catch(err){
             res.status(404).json(err);
+        }
+    }
+
+    static async listPaket(req,res){
+        try{
+            let result = await paket.findAll({
+                include:user
+            })
+            res.status(200).json(result);
+        }catch(err){
+            res.status(404).json({message:"not found"})
         }
     }
 
