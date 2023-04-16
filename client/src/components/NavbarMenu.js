@@ -6,19 +6,19 @@ import { Link, useNavigate } from "react-router-dom";
 const NavbarMenu = (props) => {
   const { loginStatus, loginCbHandler } = props;
 
-  console.log("Login APP Status" + loginStatus);
-
-  // const loginCbHandler = (result) => {
-  //   setLoginStatus(result);
-  // };
-
   const navigation = useNavigate();
 
-  const logoutHandler = () => {
+  const changeLocation = (placeToGo) => {
+    navigation(placeToGo, { replace: true });
+    window.location.reload();
+  };
+
+  const logoutHandler = async () => {
     localStorage.clear();
-    loginCbHandler(false);
+    await loginCbHandler(false, "");
     Swal.fire("Logout", "logout successful", "success");
-    navigation("/")
+    navigation("/");
+    window.location.reload();
   };
 
   return (
@@ -41,28 +41,41 @@ const NavbarMenu = (props) => {
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-              {loginStatus ? (
+              {loginStatus.status ? (
                 <>
                   <li className="nav-item">
-                    <Link className="nav-link" to="/order">
+                    <Link
+                      className="nav-link"
+                      to="/order"
+                      onClick={() => changeLocation("/order")}
+                    >
                       Order
                     </Link>
                   </li>
+                  {loginStatus.role === "joki" ? (
+                    <>
+                      <li className="nav-item">
+                        <Link
+                          className="nav-link"
+                          to="/joki"
+                          onClick={() => changeLocation("/joki")}
+                        >
+                          My Joki
+                        </Link>
+                      </li>
+                    </>
+                  ) : null}
                   <li className="nav-item">
-                    <Link className="nav-link" to="/joki">
-                      My Joki
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/user">
+                    <Link
+                      className="nav-link"
+                      to="/user"
+                      onClick={() => changeLocation("/user")}
+                    >
                       User
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link
-                      onClick={() => logoutHandler()}
-                      className="nav-link"
-                    >
+                    <Link onClick={() => logoutHandler()} className="nav-link">
                       Logout
                     </Link>
                   </li>

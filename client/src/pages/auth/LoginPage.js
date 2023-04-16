@@ -17,6 +17,7 @@ const LoginPage = (props) => {
     loginUser(form);
     loginCbHandler(true);
     navigation("/");
+    window.location.reload();
     // setTimeout(() => {}, 1500);
   };
 
@@ -24,6 +25,7 @@ const LoginPage = (props) => {
     loginJoki(form);
     loginCbHandler(true);
     navigation("/");
+    window.location.reload();
   };
 
   return (

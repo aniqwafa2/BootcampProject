@@ -14,7 +14,7 @@ const loginJoki = async (user) => {
 
     const access_token = result.data;
     localStorage.setItem("access_token", access_token);
-    localStorage.setItem("role", "user");
+    localStorage.setItem("role", "joki");
 
     Swal.fire("Berhasil Login", "Login Success", "success");
     // cb(result.data);
@@ -56,16 +56,18 @@ const detailJoki = async (cb) => {
 };
 
 const editJoki = async (user) => {
+  const headers = {
+    access_token: token,
+    "Content-Type": "multipart/form-data",
+  };
   try {
     let result = await axios({
       method: "PUT",
       url: URL + "/edit",
       data: user,
-      headers: {
-        access_token: token,
-      },
+      headers: headers
     });
-    Swal.fire("Berhasil Register", "Register Success", "success");
+    Swal.fire("Berhasil Edit Joki", "Edit Joki Success", "success");
   } catch (error) {
     console.log(error);
   }

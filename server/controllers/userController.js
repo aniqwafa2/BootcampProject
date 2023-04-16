@@ -36,7 +36,7 @@ class userController{
             }else{
                 let result2 = await detail_user.create({
                     contact,
-                    image: req.file.originalname,
+                    image: req.file.filename,
                     description,
                     userId : result.id
                 })

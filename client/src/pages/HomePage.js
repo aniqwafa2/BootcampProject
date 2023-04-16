@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import image from "../assets/mobile_legend.jpg";
 import bg_header from "../assets/bg-header";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AiFillFilter } from "react-icons/ai";
 import Lottie from "react-lottie";
 import * as loadAnimation from "../assets/lottie/73133-car-animation-front-view.json";
@@ -10,14 +10,14 @@ import { allListPaket } from "../axios/userAxios";
 
 const HomePage = () => {
   const [currentPage, setcurrentPage] = useState(1);
-  const [itemsPerPage, setitemsPerPage] = useState(10);
+  const [itemsPerPage, setitemsPerPage] = useState(5);
   const [data, setData] = useState([]);
-  const [pageNumberLimit, setpageNumberLimit] = useState(4);
-  const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(6);
+  const [pageNumberLimit, setpageNumberLimit] = useState(5);
+  const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(5);
   const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
   const [loading, setLoading] = useState(undefined);
   const [completed, setCompleted] = useState(undefined);
-
+  
   useEffect(() => {
     setTimeout(() => {
       allListPaket((result) => {
@@ -75,36 +75,6 @@ const HomePage = () => {
                           <div>{item.user.nama}</div>
                         </div>
                       </div>
-                      {/* <br /> */}
-                      {/* <div class="btn-group">
-                        <AiOutlineMenu
-                          type="button"
-                          id="dropdownMenuButton"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                        ></AiOutlineMenu>
-                        <ul
-                          class="dropdown-menu"
-                          aria-labelledby="dropdownMenuButton"
-                        >
-                          <li>
-                            <Link
-                              className="dropdown-item"
-                              // to={`/brands/edit/${id}`}
-                            >
-                              Edit
-                            </Link>
-                          </li>
-                          <li>
-                            <button
-                              className="dropdown-item"
-                              // onClick={() => deleteHandler(+id)}
-                            >
-                              Delete
-                            </button>
-                          </li>
-                        </ul>
-                      </div> */}
                     </div>
                   </div>
                 </Link>

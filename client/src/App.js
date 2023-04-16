@@ -9,24 +9,21 @@ function App() {
   const [menu, setMenu] = useState([]);
   const [footer, setFooter] = useState(null);
   const location = useLocation();
-  const [loginStatus, setLoginStatus] = useState(false);
-  const [role, setRole] = useState("")
-  const loginCbHandler = (result) => {
-    setLoginStatus(result);
+  const [loginStatus, setLoginStatus] = useState({
+    status: false,
+    role: "",
+  });
+  const loginCbHandler = (status, roleUser) => {
+    setLoginStatus({
+      status: status,
+      role: roleUser,
+    });
   };
-  const roleCbHandler = (result) => {
-    setRole(result)
-  }
   useState(() => {
     if (localStorage.getItem("access_token")) {
-      setLoginStatus(true);
-      if (localStorage.getItem("role") === "user") {
-        setRole("user")
-      } else {
-        setRole("joki")
-      }
+      loginCbHandler(true, localStorage.getItem("role"));
     } else {
-      setLoginStatus(false);
+      loginCbHandler(false, "");
     }
   });
 
@@ -48,7 +45,7 @@ function App() {
   return (
     <div>
       {menu}
-      <MainContent loginCbHandler={loginCbHandler} />
+      <MainContent loginStatus={loginStatus} loginCbHandler={loginCbHandler} />
       {footer}
     </div>
   );

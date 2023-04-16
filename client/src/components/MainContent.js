@@ -17,7 +17,7 @@ import {
 } from "../pages";
 
 const MainContent = (props) => {
-  const { loginCbHandler } = props;
+  const { loginStatus, loginCbHandler } = props;
   return (
     <div className="bg-dark">
       <Routes>
@@ -31,14 +31,20 @@ const MainContent = (props) => {
           <Route path="" element={<ListJoki />}></Route>
           <Route path="add" element={<AddJoki />}></Route>
           <Route path="edit/:id" element={<EditJoki />}></Route>
-          <Route path=":id" element={<DetailJoki />}></Route>
+          <Route
+            path=":id"
+            element={<DetailJoki loginStatus={loginStatus} />}
+          ></Route>
         </Route>
         <Route path="order" element={<Order></Order>}>
           <Route path="" element={<ListOrder />}></Route>
           <Route path=":id" element={<DetailOrder />}></Route>
         </Route>
         <Route path="user" element={<User />}>
-          <Route path="" element={<DetailUser />}></Route>
+          <Route
+            path=""
+            element={<DetailUser loginStatus={loginStatus} />}
+          ></Route>
         </Route>
       </Routes>
     </div>

@@ -3,7 +3,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { detailPaket } from "../../axios/jokiAxios";
 import { addOrder } from "../../axios/userAxios";
 
-const DetailJoki = () => {
+const DetailJoki = (props) => {
+  const { loginStatus } = props;
   const [form, setForm] = useState({
     price: 0,
     description: "",
@@ -14,6 +15,11 @@ const DetailJoki = () => {
 
   const params = useParams();
   const { id } = params;
+
+  const changeLocation = (placeToGo) => {
+    navigate(placeToGo, { replace: true });
+    window.location.reload();
+  };
 
   useEffect(() => {
     detailPaket(+id, (result) => {
@@ -27,7 +33,7 @@ const DetailJoki = () => {
 
   const orderHandler = () => {
     addOrder(id);
-    navigate("/")
+    navigate("/");
   };
 
   return (
@@ -48,19 +54,27 @@ const DetailJoki = () => {
               <div class="card-body">
                 <h5 class="card-title">Paket {id}</h5>
                 <p class="card-text">{form.description}</p>
-                <Link onClick={()=>orderHandler(id)} class="btn btn-dark">
+                <button
+                  onClick={() => orderHandler(id)}
+                  class="btn btn-dark"
+                  disabled={loginStatus.role !== "user" ? true : false}
+                >
                   Order
-                </Link>
-                <Link href="#" class="btn btn-dark mx-3">
-                  Back
-                </Link>
+                </button>
+                <button
+                  to="/"
+                  onClick={() => changeLocation("/")}
+                  class="btn btn-dark mx-3"
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           </div>
           <div className="col">
             <div class="card bg-secondary bg-gradient">
               <div class="card-body">
-                <h4 class="card-title">Rule</h4>
+                <h4 class="card-title">Rule setelah pesan</h4>
                 <h6 class="card-text">1. Segera menghungi penjoki</h6>
                 <h6 class="card-text">2. Menigirimkan informasi login</h6>
                 <h6 class="card-text">
@@ -68,6 +82,15 @@ const DetailJoki = () => {
                 </h6>
               </div>
             </div>
+            {loginStatus.role !== "user" ? (
+              <>
+                <div class="card bg-secondary bg-gradient mt-3">
+                  <div class="card-body">
+                    <h5 class="card-title">Silahkan login sebelum pesan</h5>
+                  </div>
+                </div>
+              </>
+            ) : null}
           </div>
         </div>
       </div>
