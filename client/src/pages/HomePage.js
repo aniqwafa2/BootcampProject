@@ -11,24 +11,40 @@ import { allListPaket } from "../axios/userAxios";
 const HomePage = () => {
   const [currentPage, setcurrentPage] = useState(1);
   const [itemsPerPage, setitemsPerPage] = useState(5);
-  const [data, setData] = useState([]);
   const [pageNumberLimit, setpageNumberLimit] = useState(5);
   const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(5);
   const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
   const [loading, setLoading] = useState(undefined);
   const [completed, setCompleted] = useState(undefined);
+  const [data, setData] = useState([]);
+  const [filter, setFilter] = useState([])
   
   useEffect(() => {
     setTimeout(() => {
       allListPaket((result) => {
         setLoading(true);
         setData(result);
+        setFilter(result);
       });
       setTimeout(() => {
         setCompleted(true);
       }, 500);
     }, 700);
   }, []);
+
+  const searchHandler = (keyword) => {
+    if (keyword === "") {
+      setFilter(data);
+    } else {
+      setFilter(
+        data.filter(
+          (item) =>
+            item.description.toUpperCase().includes(keyword) ||
+            item.description.toLowerCase().includes(keyword)
+        )
+      );
+    }
+  };
 
   const defaultOptions1 = {
     loop: true,
@@ -89,15 +105,15 @@ const HomePage = () => {
   };
 
   const pages = [];
-  for (let i = 1; i <= Math.ceil(data.length / itemsPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(filter.length / itemsPerPage); i++) {
     pages.push(i);
   }
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filter.slice(indexOfFirstItem, indexOfLastItem);
 
-  // console.log(data.length);
+  // console.log(filter.length);
 
   const handleClick = (event) => {
     setcurrentPage(event.target.id);
@@ -150,8 +166,6 @@ const HomePage = () => {
 
   // const filterHandler = (e) => {};
 
-  const searchHandler = (e) => {};
-
   return (
     <>
       {!completed ? (
@@ -180,12 +194,12 @@ const HomePage = () => {
                     onChange={(e) => searchHandler(e.target.value)}
                   />
                 </form>
-                <Link
+                <button
                   className="btn btn-secondary mb-3 mx-2"
-                  to="/brands/create"
+                  
                 >
                   <AiFillFilter></AiFillFilter> Filter
-                </Link>
+                </button>
               </div>
               <div>
                 <ul className="pageNumbers text-white d-flex justify-content-center">

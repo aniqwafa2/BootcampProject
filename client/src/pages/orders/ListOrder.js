@@ -6,10 +6,10 @@ import * as loadAnimation from "../../assets/lottie/73133-car-animation-front-vi
 import * as successAnimation from "../../assets/lottie/4022-success-animation.json";
 import { deleteOrder, listOrder } from "../../axios/userAxios";
 import { paketOrdered } from "../../axios/jokiAxios";
+import { toDateOrder } from "../../helpers/utlis";
 
 const ListOrder = (props) => {
   const { loginStatus } = props;
-  const [order, setOrder] = useState("");
   const [currentPage, setcurrentPage] = useState(1);
   const [itemsPerPage, setitemsPerPage] = useState(6);
   const [data, setData] = useState([]);
@@ -18,10 +18,43 @@ const ListOrder = (props) => {
   const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
   const [loading, setLoading] = useState(undefined);
   const [completed, setCompleted] = useState(undefined);
+  const [filter, setFilter] = useState(false);
+  const [classFilter1, setClassFilter1] = useState("btn btn-light");
+  const [classFilter2, setClassFilter2] = useState("btn btn-light mt-2");
+  const [dataFilter, setDataFilter] = useState([]);
 
   const filterOrders = (input) => {
-    setOrder(input);
-    console.log(order);
+    if (input === "in") {
+      if (filter === false) {
+        setClassFilter1("btn btn-secondary");
+        setClassFilter2("btn btn-light mt-2");
+        setFilter(true);
+        filterOrderByStatus(false);
+      } else {
+        setClassFilter1("btn btn-light");
+        filterOrderByStatus(null);
+        setFilter(false);
+      }
+    } else if (input === "done") {
+      if (filter === false) {
+        setClassFilter1("btn btn-light");
+        setClassFilter2("btn btn-secondary mt-2");
+        setFilter(true);
+        filterOrderByStatus(true);
+      } else {
+        setClassFilter2("btn btn-light mt-2");
+        setFilter(false);
+        filterOrderByStatus(null);
+      }
+    }
+  };
+
+  const filterOrderByStatus = (keyword) => {
+    if (keyword === null) {
+      setDataFilter(data);
+    } else {
+      setDataFilter(data.filter((item) => item.status === keyword));
+    }
   };
 
   useEffect(() => {
@@ -30,11 +63,13 @@ const ListOrder = (props) => {
         listOrder((result) => {
           setLoading(true);
           setData(result);
+          setDataFilter(result);
         });
       } else {
         paketOrdered((result) => {
           setLoading(true);
           setData(result);
+          setDataFilter(result);
         });
       }
       setTimeout(() => {
@@ -72,32 +107,38 @@ const ListOrder = (props) => {
       <>
         <h4>My Order</h4>
         <div className="d-flex pb-4">
-          <ul class="list-group">
-            <li class="list-group-item">
-              <Link onClick={() => filterOrders("in")} className="text-black">
-                Order In
-              </Link>
-            </li>
-            <li class="list-group-item">
-              <Link onClick={() => filterOrders("done")} className="text-black">
-                Order Done
-              </Link>
-            </li>
-          </ul>
-          <div class="container text-center text-black">
-            <div class="row g-0">
+          <div>
+            <h5>Filter :</h5>
+            <button
+              className={classFilter1}
+              onClick={() => filterOrders("in")}
+              type=""
+            >
+              {loginStatus.role === "user" ? "Order not completed" : "Order in"}
+            </button>
+
+            <button
+              className={classFilter2}
+              onClick={() => filterOrders("done")}
+              type=""
+            >
+              {loginStatus.role === "user" ? "Order completed" : "Order done"}
+            </button>
+          </div>
+          <div className="container text-center text-black">
+            <div className="row g-0">
               {input.map((item) => {
                 const { paket, rating, status, user, createdAt } = item;
                 return (
                   <>
-                    <div class="col-5 bg-light card p-2 mx-3 mt-2">
+                    <div className="col-5 bg-light card p-2 mx-3 mt-2">
                       <Link href="#" className="pb-5 text-black">
                         <div className="d-flex justify-content-between">
                           <h5 className="mb-1">Paket Joki {paket.id}</h5>
-                          <small>{createdAt}</small>
+                          <small>{toDateOrder(createdAt)}</small>
                         </div>
                         <div className="">
-                          <h6 className="mb-1">
+                          <h6 className="mb-1 mt-2">
                             {loginStatus.role === "user"
                               ? `Penjoki : ${paket.user.nama}`
                               : `Pemesan : ${user.nama}`}
@@ -182,13 +223,13 @@ const ListOrder = (props) => {
   };
 
   const pages = [];
-  for (let i = 1; i <= Math.ceil(data.length / itemsPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(dataFilter.length / itemsPerPage); i++) {
     pages.push(i);
   }
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = dataFilter.slice(indexOfFirstItem, indexOfLastItem);
 
   // console.log(data.length);
 
