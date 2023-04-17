@@ -151,7 +151,7 @@ class userController{
         try{
             const access_token = req.headers.access_token;
             const userId = tokenVerifier(access_token).id;
-            const paketId = req.params.id;
+            const paketId = req.params.paketId;
             let result = await order.destroy({
                 where:{userId,paketId}
             });
