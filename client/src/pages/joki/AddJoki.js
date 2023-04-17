@@ -48,7 +48,8 @@ const AddJoki = () => {
 
   const submitHandler = () => {
     createPaket(form)
-    // navigate("/joki")
+    navigate("/joki")
+    window.location.reload();
   };
 
   return (

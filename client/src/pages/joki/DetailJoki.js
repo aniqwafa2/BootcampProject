@@ -38,7 +38,7 @@ const DetailJoki = (props) => {
 
   return (
     <>
-      <div className="container px-2 pb-3 wrap-content-not-full">
+      <div className="container px-2 pb-3 wrap-detail-joki">
         <div className="text-white row gx-5">
           <div className="col position-relative">
             <div class="card bg-secondary bg-gradient">
@@ -82,11 +82,23 @@ const DetailJoki = (props) => {
                 </h6>
               </div>
             </div>
-            {loginStatus.role !== "user" ? (
+
+            {loginStatus.status === false ? (
               <>
                 <div class="card bg-secondary bg-gradient mt-3">
                   <div class="card-body">
                     <h5 class="card-title">Silahkan login sebelum pesan</h5>
+                  </div>
+                </div>
+              </>
+            ) : null}
+            {loginStatus.role === "joki" ? (
+              <>
+                <div class="card bg-secondary bg-gradient mt-3">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      Silahkan login sebagai user untuk pesan
+                    </h5>
                   </div>
                 </div>
               </>

@@ -49,15 +49,19 @@ class jokiController{
     static async update(req,res){
         try{
             const {nama, password, contact,  description} = req.body;
-            const id = req.params.id;
+            // const id = req.params.id;
+            const access_token = req.headers.access_token;
+            const id = tokenVerifier(access_token).id;
             const role = "jokis";
             let result = await user.update({
                 nama, password, role
             },{
                 where: {id}
             })
+            
+            let result2
             if(!req.file){
-                let result2 = await user_detail.update({
+                result2 = await detail_user.update({
                     contact,
                     description
                 },{
@@ -66,7 +70,7 @@ class jokiController{
                     }
                 })
             }else{
-                let result2 = await user_detail.update({
+                result2 = await detail_user.update({
                     contact,
                     image: req.file.filename,
                     description
@@ -76,7 +80,15 @@ class jokiController{
                     }
                 })
             }
-            
+            if(result2 === 1){
+                res.status(200).json({
+                    message:`User id: ${id} has been updated`
+                });
+            }else{
+                res.status(404).json({
+                    message:`User id: ${id} not found`
+                })
+            }
         }catch(err){
             res.status(500).json(err);
         }

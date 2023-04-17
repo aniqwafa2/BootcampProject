@@ -68,6 +68,7 @@ const editJoki = async (user) => {
       headers: headers
     });
     Swal.fire("Berhasil Edit Joki", "Edit Joki Success", "success");
+    console.log(result)
   } catch (error) {
     console.log(error);
   }
@@ -105,11 +106,11 @@ const detailPaket = async (id, cb) => {
   }
 };
 
-const paketOrdered = async (id, cb) => {
+const paketOrdered = async (cb) => {
   try {
     let result = await axios({
       method: "GET",
-      url: URL + "/paketordered/" + id,
+      url: URL + "/paketordered/",
       headers: {
         access_token: token,
       },

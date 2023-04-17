@@ -5,14 +5,16 @@ import Lottie from "react-lottie";
 import * as loadAnimation from "../../assets/lottie/73133-car-animation-front-view.json";
 import * as successAnimation from "../../assets/lottie/4022-success-animation.json";
 import { deleteOrder, listOrder } from "../../axios/userAxios";
+import { paketOrdered } from "../../axios/jokiAxios";
 
-const ListOrder = () => {
+const ListOrder = (props) => {
+  const { loginStatus } = props;
   const [order, setOrder] = useState("");
   const [currentPage, setcurrentPage] = useState(1);
-  const [itemsPerPage, setitemsPerPage] = useState(4);
+  const [itemsPerPage, setitemsPerPage] = useState(6);
   const [data, setData] = useState([]);
-  const [pageNumberLimit, setpageNumberLimit] = useState(4);
-  const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(4);
+  const [pageNumberLimit, setpageNumberLimit] = useState(6);
+  const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(6);
   const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
   const [loading, setLoading] = useState(undefined);
   const [completed, setCompleted] = useState(undefined);
@@ -24,10 +26,17 @@ const ListOrder = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      listOrder((result) => {
-        setLoading(true);
-        setData(result);
-      });
+      if (loginStatus.role === "user") {
+        listOrder((result) => {
+          setLoading(true);
+          setData(result);
+        });
+      } else {
+        paketOrdered((result) => {
+          setLoading(true);
+          setData(result);
+        });
+      }
       setTimeout(() => {
         setCompleted(true);
       }, 500);
@@ -54,9 +63,9 @@ const ListOrder = () => {
 
   const navigate = useNavigate();
 
-  const deleteHandler = (id) =>{
-    deleteOrder(id)
-  }
+  const deleteHandler = (id) => {
+    deleteOrder(id);
+  };
 
   const renderData = (input) => {
     return (
@@ -75,9 +84,48 @@ const ListOrder = () => {
               </Link>
             </li>
           </ul>
-          <div className="list-group mx-3">
+          <div class="container text-center text-black">
+            <div class="row g-0">
+              {input.map((item) => {
+                const { paket, rating, status, user, createdAt } = item;
+                return (
+                  <>
+                    <div class="col-5 bg-light card p-2 mx-3 mt-2">
+                      <Link href="#" className="pb-5 text-black">
+                        <div className="d-flex justify-content-between">
+                          <h5 className="mb-1">Paket Joki {paket.id}</h5>
+                          <small>{createdAt}</small>
+                        </div>
+                        <div className="">
+                          <h6 className="mb-1">
+                            {loginStatus.role === "user"
+                              ? `Penjoki : ${paket.user.nama}`
+                              : `Pemesan : ${user.nama}`}
+                          </h6>
+                          <small>Rating {rating}</small>
+                          <br />
+                          <strong>
+                            {status ? "Selesai" : "Belum selesai"}
+                          </strong>
+                        </div>
+                        <div className="position-absolute bottom-0 end-0 pb-2 px-2">
+                          <Link
+                            onClick={() => deleteHandler()}
+                            className="btn btn-danger"
+                          >
+                            <AiOutlineDelete />
+                          </Link>
+                        </div>
+                      </Link>
+                    </div>
+                  </>
+                );
+              })}
+            </div>
+          </div>
+          {/* <div className="list-group mx-3">
             {input.map((item) => {
-              const { paket, rating, status } = item;
+              const { paket, rating, status, user, createdAt } = item;
               return (
                 <>
                   <Link
@@ -86,15 +134,17 @@ const ListOrder = () => {
                   >
                     <div className="d-flex w-100 justify-content-between">
                       <h5 className="mb-1">Paket Joki {paket.id}</h5>
-                      <small>3 days ago</small>
+                      <small>{createdAt}</small>
                     </div>
-                    <p className="mb-1">
-                      Donec id elit non mi porta gravida at eget metus. Maecenas
-                      sed diam eget risus varius blandit.
-                    </p>
+                    <p className="mb-1">{user.nama}</p>
                     <small>Rating {rating}</small>
+                    <br />
+                    <small>Status {status.toString()}</small>
                     <div className="position-absolute bottom-0 end-0 pb-2 px-2">
-                      <Link onClick={()=>deleteHandler()} className="btn btn-danger">
+                      <Link
+                        onClick={() => deleteHandler()}
+                        className="btn btn-danger"
+                      >
                         <AiOutlineDelete />
                       </Link>
                     </div>
@@ -102,7 +152,7 @@ const ListOrder = () => {
                 </>
               );
             })}
-          </div>
+          </div> */}
           <ul className="pageNumbers text-white h-25">
             <li>
               <button
@@ -202,7 +252,9 @@ const ListOrder = () => {
           </div>
         </>
       ) : (
-        <>{renderData(currentItems)}</>
+        <>
+          <div className="wrap-list-order">{renderData(currentItems)}</div>
+        </>
       )}
     </>
   );

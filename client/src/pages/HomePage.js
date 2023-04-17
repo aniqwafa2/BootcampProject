@@ -169,11 +169,11 @@ const HomePage = () => {
           <img src={bg_header} alt="" className="bg-header" />
           {/* BsFilterSquare */}
           <div className="container pt-4 pb-5">
-            <div class="d-flex justify-content-between">
+            <div className="d-flex justify-content-between">
               <div className="d-flex">
-                <form class="search-width">
+                <form className="search-width">
                   <input
-                    class="form-control me-1"
+                    className="form-control me-1"
                     type="search"
                     placeholder="Search by name"
                     aria-label="Search"

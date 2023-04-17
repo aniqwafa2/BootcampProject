@@ -37,7 +37,7 @@ const MainContent = (props) => {
           ></Route>
         </Route>
         <Route path="order" element={<Order></Order>}>
-          <Route path="" element={<ListOrder />}></Route>
+          <Route path="" element={<ListOrder loginStatus={loginStatus} />}></Route>
           <Route path=":id" element={<DetailOrder />}></Route>
         </Route>
         <Route path="user" element={<User />}>

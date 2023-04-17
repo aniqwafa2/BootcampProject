@@ -31,3 +31,7 @@
     max-height: 30rem;
     object-fit: cover;
 }
+
+.wrap-detail-joki{
+    min-height: 75vh;
+}

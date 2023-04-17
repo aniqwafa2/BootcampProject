@@ -99,7 +99,7 @@ const DetailUser = (props) => {
   return (
     <>
       <h4 className="text-center">Detail User</h4>
-      <div className="container px-2 pb-3">
+      <div className="container px-2 pb-3 wrap-detail-user">
         <div className="row gx-5">
           <div className="col position-relative">
             <p className="img-preview-wrapper">
@@ -176,14 +176,14 @@ const DetailUser = (props) => {
                     }
                   />
                 </div>
-                <div className="mb-3" style={{ display: "none" }}>
+                {/* <div className="mb-3" style={{ display: "none" }}>
                   <label className="form-label">Password</label>
                   <input
                     type="password"
                     className="form-control"
                     //   onChange={(e) => setForm({ ...form, password: e.target.value })}
                   />
-                </div>
+                </div> */}
                 {update ? (
                   <>
                     <div className="d-flex">
