@@ -5,8 +5,8 @@ import { AiOutlineDelete } from "react-icons/ai";
 import Lottie from "react-lottie";
 import * as loadAnimation from "../../assets/lottie/73133-car-animation-front-view.json";
 import * as successAnimation from "../../assets/lottie/4022-success-animation.json";
-import { deleteOrder, listOrder } from "../../axios/userAxios";
-import { paketOrdered } from "../../axios/jokiAxios";
+import { deleteOrder, listOrder, rateOrderDone } from "../../axios/userAxios";
+import { jokiDone, paketOrdered } from "../../axios/jokiAxios";
 import { toDateOrder } from "../../helpers/utlis";
 
 const ListOrder = (props) => {
@@ -23,7 +23,9 @@ const ListOrder = (props) => {
   const [classFilter1, setClassFilter1] = useState("btn btn-light");
   const [classFilter2, setClassFilter2] = useState("btn btn-light mt-2");
   const [dataFilter, setDataFilter] = useState([]);
-  const [star, setStar] = useState(0);
+  const [star, setStar] = useState({
+    rating: 0,
+  });
 
   const filterOrders = (input) => {
     if (input === "in") {
@@ -98,14 +100,24 @@ const ListOrder = (props) => {
     },
   };
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const deleteHandler = (id) => {
-    deleteOrder(id);
+  // const deleteHandler = (id) => {
+  //   deleteOrder(id);
+  // };
+
+  const orderDoneHandler = (id) => {
+    jokiDone(+id);
+    window.location.reload();
   };
 
   const ratingChanged = (newRating) => {
-    setStar(newRating);
+    setStar({ ...star, rating: newRating });
+  };
+
+  const rateOrderHandler = (id) => {
+    rateOrderDone(+id, star);
+    window.location.reload();
   };
 
   const renderData = (input) => {
@@ -134,7 +146,7 @@ const ListOrder = (props) => {
           <div className="container text-center text-black">
             <div className="row g-0">
               {input.map((item) => {
-                const { paket, rating, status, user, createdAt } = item;
+                const { id, paket, rating, status, user, createdAt } = item;
                 return (
                   <>
                     <div className="col-5 bg-light card p-2 mx-3 mt-2">
@@ -177,6 +189,7 @@ const ListOrder = (props) => {
                               <button
                                 className="btn btn-outline-warning"
                                 type=""
+                                onClick={() => rateOrderHandler(id)}
                               >
                                 Rate
                               </button>
@@ -184,7 +197,11 @@ const ListOrder = (props) => {
                           ) : null}
                           {loginStatus.role === "joki" && !status ? (
                             <>
-                              <button className="btn btn-outline-dark" type="">
+                              <button
+                                onClick={() => orderDoneHandler(id)}
+                                className="btn btn-outline-dark"
+                                type=""
+                              >
                                 Done
                               </button>
                             </>

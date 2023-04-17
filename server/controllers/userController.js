@@ -138,7 +138,8 @@ class userController{
             //const userId = req.params.userId
             let result = await order.findAll({
                 where:{userId},
-                include:{model:paket, include:user}
+                include:{model:paket, include:user},
+                order: [["id", "ASC"]],
             })
             res.status(200).json(result);
         }catch(err){
@@ -161,9 +162,11 @@ class userController{
 
     static async deleteOrder(req,res){
         try{
-            const id = req.params.id;
+            const access_token = req.headers.access_token;
+            const userId = tokenVerifier(access_token).id;
+            const paketId = req.params.paketId;
             let result = await order.destroy({
-                where:{id}
+                where:{userId,paketId}
             });
             if(result === 1){
                 res.status(200).json({
@@ -223,6 +226,31 @@ class userController{
             //res.send({message:'no file'})
         }catch(err){
             res.send(err);
+        }
+    }
+
+    static async rateOrder(req, res){
+        try {
+            const {rating} = req.body;
+            const id = req.params.id;
+            let result = await order.update({
+                    rating
+                },
+                {
+                    where:{id}
+                }
+            );
+            if(result === 1){
+                res.status(200).json({
+                    message:`Rating order id: ${id} has been updated`
+                });
+            }else{
+                res.status(404).json({
+                    message:`Order id: ${id} not found`
+                })
+            }
+        } catch (error) {
+            
         }
     }
 }

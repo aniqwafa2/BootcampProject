@@ -148,6 +148,23 @@ const allListPaket = async (cb) => {
   }
 };
 
+const rateOrderDone = async (id, rate) => {
+  try {
+    let result = await axios({
+      method: "PUT",
+      url: URL + "/orderrate/" + id,
+      data: rate,
+      headers: {
+        access_token: token,
+      },
+    });
+    console.log(result)
+    Swal.fire("Berhasil Rate Order", "Rate Order Success", "success");
+  } catch (error) {
+    console.log(error)
+  }
+} 
+
 export {
   loginUser,
   registerUser,
@@ -158,4 +175,5 @@ export {
   editUser,
   addOrder,
   allListPaket,
+  rateOrderDone
 };

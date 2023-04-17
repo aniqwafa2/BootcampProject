@@ -4,7 +4,6 @@ const userController = require('../controllers/userController');
 const { authenticationUser } = require('../midlewares/auth');
 const uploadImage = require('../midlewares/uploadimage');
 
-
 userRoute.get('/profile', authenticationUser,userController.detailUser);
 userRoute.get('/order',authenticationUser, userController.listOrder);
 userRoute.get('/detailorder/:id',authenticationUser, userController.detailOrder);
@@ -18,6 +17,8 @@ userRoute.post('/create',uploadImage.single('image'), userController.create);
 userRoute.post('/createorder/:id',authenticationUser, userController.createOrder);
 
 userRoute.post('/upload', uploadImage.single('image'), userController.upload);
+
+userRoute.put('/orderrate/:id',authenticationUser, userController.rateOrder);
 
 
 module.exports = userRoute;

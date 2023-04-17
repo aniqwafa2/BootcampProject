@@ -275,13 +275,11 @@ class jokiController{
 
     static async jokiDone(req, res) {
         try {
-            const access_token = req.headers.access_token;
-            const userId = tokenVerifier(access_token).id;
             let id = req.params.id;
             let result = await order.update({
                 status: true,
             },{
-                where:{id, userId}
+                where:{id}
             })
 
             if(result === 1){

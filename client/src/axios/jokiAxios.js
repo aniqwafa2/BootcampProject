@@ -176,6 +176,26 @@ const editPaket = async (id, paket) => {
   }
 };
 
+const jokiDone = async (id) => {
+  try {
+    let result = await axios({
+      method: "PUT",
+      url: URL + "/orderdone/" + id,
+      headers: {
+        access_token: token,
+      },
+    });
+    console.log(result);
+    Swal.fire(
+      "Berhasil Menyelesaikan Order",
+      "Menyelesaikan Order Success",
+      "success"
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   loginJoki,
   registerJoki,
@@ -186,5 +206,6 @@ export {
   paketOrdered,
   createPaket,
   deletePaket,
-  editPaket
+  editPaket,
+  jokiDone,
 };
