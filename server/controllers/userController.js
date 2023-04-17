@@ -149,9 +149,11 @@ class userController{
 
     static async deleteOrder(req,res){
         try{
-            const id = req.params.id;
+            const access_token = req.headers.access_token;
+            const userId = tokenVerifier(access_token).id;
+            const paketId = req.params.id;
             let result = await order.destroy({
-                where:{id}
+                where:{userId,paketId}
             });
             if(result === 1){
                 res.status(200).json({

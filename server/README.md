@@ -15,7 +15,7 @@ npx sequelize-cli model:generate --name paket --attributes description:text,imag
 |GET       |user/order                |mengambil list order user|
 |GET       |user/detailorder/:id      |mengambil detail order berdasar id|
 |GET       |user/listpaket            |mengambil list paket|
-|DELETE    |user/order/:id            |menghapus order user sesuai id dari order|
+|DELETE    |user/order/:paketId       |menghapus order user sesuai berdasarkan userId dari token dan paketId|
 |PUT       |user/edit                 |mengedit semua informasi user kecuali username|
 |POST      |user/login                |login menggunakan akun user|
 |POST      |user/create               |membuat akun user|

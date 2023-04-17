@@ -9,7 +9,7 @@ userRoute.get('/profile', authenticationUser,userController.detailUser);
 userRoute.get('/order',authenticationUser, userController.listOrder);
 userRoute.get('/detailorder/:id',authenticationUser, userController.detailOrder);
 userRoute.get('/listpaket',authenticationUser, userController.listPaket)
-userRoute.delete('/order/:id',authenticationUser, userController.deleteOrder);
+userRoute.delete('/order/:paketId',authenticationUser, userController.deleteOrder);
 
 userRoute.put('/edit',authenticationUser,uploadImage.single('image'), userController.update);
 
