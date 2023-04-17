@@ -224,7 +224,8 @@ class jokiController{
             const access_token = req.headers.access_token;
             const userId = tokenVerifier(access_token).id;
             let result = await paket.findAll({
-                where:{userId}
+                where:{userId},
+                order: [["id", "ASC"]],
             })
             res.status(200).json(result)
         }catch(err){
@@ -236,7 +237,13 @@ class jokiController{
         try{
             const id = req.params.id
             let result = await paket.findOne({
-                where:{id}
+                where:{id},
+                include: {
+                    model: user,
+                    include:{
+                        model: detail_user
+                    }
+                }
             })
             res.status(200).json(result)
         }catch(err){
@@ -259,6 +266,7 @@ class jokiController{
                     }
                 ]
             })
+            
             res.status(200).json(result)
         }catch(err){
             res.status(404).json(err);

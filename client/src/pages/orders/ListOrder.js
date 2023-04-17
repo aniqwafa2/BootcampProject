@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ReactStars from "react-rating-stars-component";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineDelete } from "react-icons/ai";
 import Lottie from "react-lottie";
@@ -22,6 +23,7 @@ const ListOrder = (props) => {
   const [classFilter1, setClassFilter1] = useState("btn btn-light");
   const [classFilter2, setClassFilter2] = useState("btn btn-light mt-2");
   const [dataFilter, setDataFilter] = useState([]);
+  const [star, setStar] = useState(0);
 
   const filterOrders = (input) => {
     if (input === "in") {
@@ -102,6 +104,10 @@ const ListOrder = (props) => {
     deleteOrder(id);
   };
 
+  const ratingChanged = (newRating) => {
+    setStar(newRating);
+  };
+
   const renderData = (input) => {
     return (
       <>
@@ -132,32 +138,59 @@ const ListOrder = (props) => {
                 return (
                   <>
                     <div className="col-5 bg-light card p-2 mx-3 mt-2">
-                      <Link href="#" className="pb-5 text-black">
+                      <div className="pb-5 text-black">
                         <div className="d-flex justify-content-between">
                           <h5 className="mb-1">Paket Joki {paket.id}</h5>
                           <small>{toDateOrder(createdAt)}</small>
                         </div>
-                        <div className="">
+                        <div className="align-item-center">
                           <h6 className="mb-1 mt-2">
                             {loginStatus.role === "user"
                               ? `Penjoki : ${paket.user.nama}`
                               : `Pemesan : ${user.nama}`}
                           </h6>
-                          <small>Rating {rating}</small>
-                          <br />
+                          {/* <small>Rating {rating}</small> */}
                           <strong>
                             {status ? "Selesai" : "Belum selesai"}
                           </strong>
+                          <br />
+                          <br />
                         </div>
                         <div className="position-absolute bottom-0 end-0 pb-2 px-2">
-                          <Link
+                          {/* <Link
                             onClick={() => deleteHandler()}
                             className="btn btn-danger"
                           >
                             <AiOutlineDelete />
-                          </Link>
+                          </Link> */}
+                          {loginStatus.role === "user" &&
+                          rating === 0 &&
+                          status ? (
+                            <>
+                              <ReactStars
+                                count={5}
+                                onChange={ratingChanged}
+                                value={rating}
+                                size={24}
+                                activeColor="#ffd700"
+                              />
+                              <button
+                                className="btn btn-outline-warning"
+                                type=""
+                              >
+                                Rate
+                              </button>
+                            </>
+                          ) : null}
+                          {loginStatus.role === "joki" && !status ? (
+                            <>
+                              <button className="btn btn-outline-dark" type="">
+                                Done
+                              </button>
+                            </>
+                          ) : null}
                         </div>
-                      </Link>
+                      </div>
                     </div>
                   </>
                 );

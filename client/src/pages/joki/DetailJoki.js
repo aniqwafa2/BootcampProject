@@ -9,6 +9,7 @@ const DetailJoki = (props) => {
     price: 0,
     description: "",
     image: null,
+    contact: 0
   });
 
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ const DetailJoki = (props) => {
         description: result.description,
         image: result.image,
         price: result.price,
+        contact: result.user.detail_user.contact
       });
     });
   }, []);
@@ -52,8 +54,15 @@ const DetailJoki = (props) => {
                 alt="..."
               />
               <div class="card-body">
-                <h5 class="card-title">Paket {id}</h5>
-                <p class="card-text">{form.description}</p>
+                <div className="d-flex justify-content-between">
+                  <h5 class="card-title">Paket {id}</h5>
+                  <h6>Contact : {form.contact}</h6>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <p class="card-text">{form.description}</p>
+                  <h6>Rp {form.price}</h6>
+                </div>
+
                 <button
                   onClick={() => orderHandler(id)}
                   class="btn btn-dark"
