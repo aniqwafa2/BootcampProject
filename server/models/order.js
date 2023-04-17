@@ -16,9 +16,29 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   order.init({
-    userId: DataTypes.INTEGER,
-    paketId: DataTypes.INTEGER,
-    status: DataTypes.BOOLEAN,
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    userId: {
+      type:DataTypes.INTEGER,
+      validate: {
+        notEmpty: true
+        }
+    },
+    paketId: {
+      type:DataTypes.INTEGER,
+      validate: {
+        notEmpty: true
+        }
+    },
+    status: {
+      type:DataTypes.BOOLEAN,
+      validate: {
+        notEmpty: true
+        }
+    },
     rating: DataTypes.INTEGER
   }, {
     sequelize,

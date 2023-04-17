@@ -1,4 +1,5 @@
 const {user, paket,order,detail_user} = require('../models');
+const { decryptPW } = require('../helpers/bycript');
 const { tokenGenrator,tokenVerifier } = require('../helpers/token');
 
 class jokiController{
@@ -7,8 +8,7 @@ class jokiController{
             const access_token = req.headers.access_token;
             const id = tokenVerifier(access_token).id;
             let result = await user.findOne({
-                where: {id}
-            },{
+                where: {id},
                 include:detail_user
             })
             res.status(200).json(result);
@@ -19,17 +19,27 @@ class jokiController{
 
     static async create(req,res){
         try{
-            const {nama, username, password, contact, image, description} = req.body;
+            const {nama, username, password, contact,  description} = req.body;
             const role = "jokis"
             let result = await user.create({
                 nama, username, password, role
             });
-            let result2 = await detail_user.create({
-                contact,
-                image,
-                description,
-                userId : result.id
-            })
+            if(!req.file){
+                let result2 = await detail_user.create({
+                    contact,
+                    image:"",
+                    description,
+                    userId : result.id
+                })
+            }else{
+                let result2 = await detail_user.create({
+                    contact,
+                    image: req.file.filename,
+                    description,
+                    userId : result.id
+                })
+            }
+            
             res.status(201).json(result);
         }catch(err){
             res.status(500).json(err);
@@ -38,23 +48,47 @@ class jokiController{
 
     static async update(req,res){
         try{
-            const {nama, username, password, contact, image, description} = req.body;
-            const id = req.params.id;
+            const {nama, password, contact,  description} = req.body;
+            // const id = req.params.id;
+            const access_token = req.headers.access_token;
+            const id = tokenVerifier(access_token).id;
             const role = "jokis";
             let result = await user.update({
-                nama, username, password, role
+                nama, password, role
             },{
                 where: {id}
             })
-            let result2 = await user_detail.update({
-                contact,
-                image,
-                description
-            },{
-                where:{
-                    userId: id
-                }
-            })
+            
+            let result2
+            if(!req.file){
+                result2 = await detail_user.update({
+                    contact,
+                    description
+                },{
+                    where:{
+                        userId: id
+                    }
+                })
+            }else{
+                result2 = await detail_user.update({
+                    contact,
+                    image: req.file.filename,
+                    description
+                },{
+                    where:{
+                        userId: id
+                    }
+                })
+            }
+            if(result2 === 1){
+                res.status(200).json({
+                    message:`User id: ${id} has been updated`
+                });
+            }else{
+                res.status(404).json({
+                    message:`User id: ${id} not found`
+                })
+            }
         }catch(err){
             res.status(500).json(err);
         }
@@ -105,18 +139,19 @@ class jokiController{
 
     static async createPaket(req,res){
         try{
-            const{description, image, price} = req.body;
+            const{description, price} = req.body;
             const access_token = req.headers.access_token;
             const userId = tokenVerifier(access_token).id;
+            let result
             if(!req.file){
-                let result = await paket.create({
+                result = await paket.create({
                     description, 
                     image:"",
                     userId, 
                     price
                 })
             }else{
-                let result = await paket.create({
+                result = await paket.create({
                     description, 
                     image: req.file.filename,
                     userId, 
@@ -132,17 +167,17 @@ class jokiController{
     static async editPaket(req,res){
         try{
             const id = req.params.id;
-            const{description, image, price} = req.body;
-            if(!re.file){
-                let result = await paket.update({
+            const{description, price} = req.body;
+            let result
+            if(!req.file){
+                result = await paket.update({
                     description, 
-                    image, 
                     price
                 },{
                     where:{id}
                 })
             }else{
-                let result = await paket.update({
+                result = await paket.update({
                     description, 
                     image: req.file.filename, 
                     price
@@ -150,7 +185,15 @@ class jokiController{
                     where:{id}
                 })
             }
-            res.status(201).json(result);
+            if(result === 1){
+                res.status(200).json({
+                    message:`Paket id: ${id} has been updated`
+                });
+            }else{
+                res.status(404).json({
+                    message:`Paket id: ${id} not found`
+                })
+            }
         }catch(err){
             res.status(404).json(err);
         }
@@ -162,6 +205,15 @@ class jokiController{
             let result = paket.destroy({
                 where:{id}
             })
+            if(result === 1){
+                res.status(200).json({
+                    message:`Paket id: ${id} was deleted`
+                });
+            }else{
+                res.status(404).json({
+                    message:`Paket id: ${id} not found`
+                })
+            }
         }catch(err){
             res.status(404).json(err);
         }
@@ -172,7 +224,8 @@ class jokiController{
             const access_token = req.headers.access_token;
             const userId = tokenVerifier(access_token).id;
             let result = await paket.findAll({
-                where:{userId}
+                where:{userId},
+                order: [["id", "ASC"]],
             })
             res.status(200).json(result)
         }catch(err){
@@ -184,7 +237,13 @@ class jokiController{
         try{
             const id = req.params.id
             let result = await paket.findOne({
-                where:{id}
+                where:{id},
+                include: {
+                    model: user,
+                    include:{
+                        model: detail_user
+                    }
+                }
             })
             res.status(200).json(result)
         }catch(err){
@@ -194,9 +253,9 @@ class jokiController{
 
     static async listPaketOrdered(req,res){
         try{
-            // const access_token = req.headers.access_token;
-            // const userId = tokenVerifier(access_token).id;
-            let userId = req.params.id;
+            const access_token = req.headers.access_token;
+            const userId = tokenVerifier(access_token).id;
+            //let userId = req.params.id;
             let result = await order.findAll({
                 include:[
                     {model: user},
@@ -207,9 +266,33 @@ class jokiController{
                     }
                 ]
             })
+            
             res.status(200).json(result)
         }catch(err){
             res.status(404).json(err);
+        }
+    }
+
+    static async jokiDone(req, res) {
+        try {
+            let id = req.params.id;
+            let result = await order.update({
+                status: true,
+            },{
+                where:{id}
+            })
+
+            if(result === 1){
+                res.status(200).json({
+                    message:`Paket id: ${id} have been done`
+                });
+            }else{
+                res.status(404).json({
+                    message:`Paket id: ${id} havent done`
+                })
+            }
+        } catch (error) {
+            res.status(404).json(err);  
         }
     }
 }

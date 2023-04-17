@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import image from "../../assets/bg-login.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../../axios/userAxios";
+import { loginJoki } from "../../axios/jokiAxios";
 
 const LoginPage = (props) => {
   const { loginCbHandler } = props;
@@ -13,11 +14,18 @@ const LoginPage = (props) => {
   const navigation = useNavigate();
 
   const submitHandler = () => {
-    loginUser(form, (result) => {
-      localStorage.setItem("access_token", result);
-      loginCbHandler(true);
-    }).then(() => navigation("/"));
+    loginUser(form);
+    loginCbHandler(true);
+    navigation("/");
+    window.location.reload();
     // setTimeout(() => {}, 1500);
+  };
+
+  const submitHandlerJoki = () => {
+    loginJoki(form);
+    loginCbHandler(true);
+    navigation("/");
+    window.location.reload();
   };
 
   return (
@@ -62,7 +70,7 @@ const LoginPage = (props) => {
                 Login User
               </button>
               <button
-                // onClick={submitHandler}
+                onClick={submitHandlerJoki}
                 type="submit"
                 className="btn btn-secondary mx-2"
               >

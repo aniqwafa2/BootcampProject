@@ -18,7 +18,12 @@ module.exports = (sequelize, DataTypes) => {
     contact: DataTypes.STRING,
     image: DataTypes.STRING,
     description: DataTypes.TEXT,
-    userId: DataTypes.INTEGER
+    userId:{ 
+      type: DataTypes.INTEGER,
+      validate: {
+        notEmpty: true
+        }
+    }
   }, {
     sequelize,
     modelName: 'detail_user',

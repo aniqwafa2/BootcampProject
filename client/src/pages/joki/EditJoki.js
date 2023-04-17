@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { createPaket } from "../../axios/jokiAxios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { detailPaket } from "../../axios/jokiAxios";
+import { editPaket } from "../../axios/jokiAxios";
 
-const AddJoki = () => {
+const EditJoki = () => {
   const imageMimeType = /image\/(png|jpg|jpeg)/i;
   const [file, setFile] = useState(null);
   const [fileDataURL, setFileDataURL] = useState(null);
   const [form, setForm] = useState({
-    // name: "",
+    price: 0,
     description: "",
     image: null,
-    price: 0,
   });
 
   const navigate = useNavigate();
@@ -24,6 +24,19 @@ const AddJoki = () => {
     setFile(file);
     setForm({ ...form, image: e.target.files[0] });
   };
+
+  const params = useParams();
+  const { id } = params;
+
+  useEffect(() => {
+    detailPaket(+id, (result) => {
+      setForm({
+        description: result.description,
+        image: result.image,
+        price: result.price
+      });
+    });
+  }, []);
 
   useEffect(() => {
     let fileReader,
@@ -47,9 +60,8 @@ const AddJoki = () => {
   }, [file]);
 
   const submitHandler = () => {
-    createPaket(form)
+    editPaket(+id, form)
     navigate("/joki")
-    window.location.reload();
   };
 
   return (
@@ -58,27 +70,25 @@ const AddJoki = () => {
         <div className="text-white row gx-5">
           <div className="col position-relative">
             <img
-              src={fileDataURL ?? "https://placehold.co/200x200"}
+              src={
+                fileDataURL ??
+                (form.image
+                  ? `http://localhost:3000/uploaded/${form.image}`
+                  : "https://placehold.co/200x200")
+              }
               className="img-preview"
               alt="..."
             />
           </div>
           <div className="col">
-            <h3>Add Joki</h3>
+            <h3>Edit Joki</h3>
             <form className="pb-3">
-              {/* <div className="mb-3">
-                <label className="form-label">Name</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                />
-              </div> */}
               <div className="mb-3">
                 <label className="form-label">Description</label>
                 <textarea
                   type="text"
                   className="form-control"
+                  value={form.description}
                   onChange={(e) =>
                     setForm({ ...form, description: e.target.value })
                   }
@@ -88,6 +98,7 @@ const AddJoki = () => {
                 <label className="form-label">Price</label>
                 <input
                   type="number"
+                  value={form.price}
                   className="form-control"
                   onChange={(e) => setForm({ ...form, price: e.target.value })}
                 />
@@ -116,4 +127,4 @@ const AddJoki = () => {
   );
 };
 
-export default AddJoki;
+export default EditJoki;

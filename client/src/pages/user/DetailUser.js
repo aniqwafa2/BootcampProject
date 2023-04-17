@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { detailUser } from "../../axios/userAxios";
+import { detailUser, editUser } from "../../axios/userAxios";
+import { useNavigate } from "react-router-dom";
+import { detailJoki, editJoki } from "../../axios/jokiAxios";
 
-const DetailUser = () => {
+const DetailUser = (props) => {
+  const { loginStatus } = props;
   const imageMimeType = /image\/(png|jpg|jpeg)/i;
   const [update, setUpdate] = useState(false);
   const [file, setFile] = useState(null);
@@ -10,7 +13,6 @@ const DetailUser = () => {
     nama: "",
     username: "",
     password: "",
-    role: "",
     contact: "",
     image: null,
     description: "",
@@ -27,20 +29,31 @@ const DetailUser = () => {
   };
 
   const getUserData = () => {
-    const token = localStorage.getItem("access_token");
-    detailUser(token, (result) => {
-      setForm({
-        nama: result.nama,
-        username: result.username,
-        contact: result.contact,
-        description: result.description,
-        role: result.role
+    if (loginStatus.role === "user") {
+      detailUser((result) => {
+        setForm({
+          nama: result.nama,
+          username: result.username,
+          contact: result.detail_user.contact,
+          description: result.detail_user.description,
+          image: result.detail_user.image,
+        });
       });
-    });
+    } else {
+      detailJoki((result) => {
+        setForm({
+          nama: result.nama,
+          username: result.username,
+          contact: result.detail_user.contact,
+          description: result.detail_user.description,
+          image: result.detail_user.image,
+        });
+      });
+    }
   };
 
   useEffect(() => {
-    getUserData()
+    getUserData();
   }, []);
 
   useEffect(() => {
@@ -72,17 +85,31 @@ const DetailUser = () => {
     }
   };
 
-  const submitUpdate = () => {};
+  const navigate = useNavigate();
+
+  const submitUpdate = () => {
+    if (loginStatus.role === "user") {
+      editUser(form);
+    } else {
+      editJoki(form);
+    }
+    // navigate(0);
+  };
 
   return (
     <>
       <h4 className="text-center">Detail User</h4>
-      <div className="container px-2 pb-3">
+      <div className="container px-2 pb-3 wrap-detail-user">
         <div className="row gx-5">
           <div className="col position-relative">
             <p className="img-preview-wrapper">
               <img
-                src={fileDataURL ?? "https://placehold.co/200x200"}
+                src={
+                  fileDataURL ??
+                  (form.image
+                    ? `http://localhost:3000/uploaded/${form.image}`
+                    : "https://placehold.co/200x200")
+                }
                 className="img-preview"
                 alt="..."
               />
@@ -142,30 +169,21 @@ const DetailUser = () => {
                   <input
                     type="text"
                     className="form-control"
+                    value={form.description}
                     disabled={!update}
                     onChange={(e) =>
                       setForm({ ...form, description: e.target.value })
                     }
                   />
                 </div>
-                <div className="mb-3" style={{ display: "none" }}>
+                {/* <div className="mb-3" style={{ display: "none" }}>
                   <label className="form-label">Password</label>
                   <input
                     type="password"
                     className="form-control"
                     //   onChange={(e) => setForm({ ...form, password: e.target.value })}
                   />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Role</label>
-                  <input
-                    type="text"
-                    disabled={!update}
-                    className="form-control"
-                    value={form.role}
-                    onChange={(e) => setForm({ ...form, role: e.target.value })}
-                  />
-                </div>
+                </div> */}
                 {update ? (
                   <>
                     <div className="d-flex">

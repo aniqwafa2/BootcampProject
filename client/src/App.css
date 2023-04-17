@@ -35,7 +35,7 @@ hr.divider {
 .img-wrap-list {
   height: 15rem;
   width: 15rem;
-  object-fit: cover
+  object-fit: fill
 }
 
 .search-width {
