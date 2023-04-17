@@ -65,10 +65,10 @@ const editJoki = async (user) => {
       method: "PUT",
       url: URL + "/edit",
       data: user,
-      headers: headers
+      headers: headers,
     });
     Swal.fire("Berhasil Edit Joki", "Edit Joki Success", "success");
-    console.log(result)
+    console.log(result);
   } catch (error) {
     console.log(error);
   }
@@ -157,6 +157,25 @@ const deletePaket = async (id) => {
   }
 };
 
+const editPaket = async (id, paket) => {
+  const headers = {
+    access_token: token,
+    "Content-Type": "multipart/form-data",
+  };
+  try {
+    let result = await axios({
+      method: "PUT",
+      url: URL + "/paket/" + id,
+      data: paket,
+      headers: headers,
+    });
+    console.log(result);
+    Swal.fire("Berhasil Edit Paket Order", "Delete Edit Success", "success");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   loginJoki,
   registerJoki,
@@ -166,5 +185,6 @@ export {
   detailPaket,
   paketOrdered,
   createPaket,
-  deletePaket
+  deletePaket,
+  editPaket
 };

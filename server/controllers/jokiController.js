@@ -167,17 +167,17 @@ class jokiController{
     static async editPaket(req,res){
         try{
             const id = req.params.id;
-            const{description, image, price} = req.body;
+            const{description, price} = req.body;
+            let result
             if(!req.file){
-                let result = await paket.update({
+                result = await paket.update({
                     description, 
-                    image, 
                     price
                 },{
                     where:{id}
                 })
             }else{
-                let result = await paket.update({
+                result = await paket.update({
                     description, 
                     image: req.file.filename, 
                     price
@@ -185,7 +185,15 @@ class jokiController{
                     where:{id}
                 })
             }
-            res.status(201).json(result);
+            if(result === 1){
+                res.status(200).json({
+                    message:`Paket id: ${id} has been updated`
+                });
+            }else{
+                res.status(404).json({
+                    message:`Paket id: ${id} not found`
+                })
+            }
         }catch(err){
             res.status(404).json(err);
         }
@@ -254,6 +262,31 @@ class jokiController{
             res.status(200).json(result)
         }catch(err){
             res.status(404).json(err);
+        }
+    }
+
+    static async jokiDone(req, res) {
+        try {
+            const access_token = req.headers.access_token;
+            const userId = tokenVerifier(access_token).id;
+            let id = req.params.id;
+            let result = await order.update({
+                status: true,
+            },{
+                where:{id, userId}
+            })
+
+            if(result === 1){
+                res.status(200).json({
+                    message:`Paket id: ${id} have been done`
+                });
+            }else{
+                res.status(404).json({
+                    message:`Paket id: ${id} havent done`
+                })
+            }
+        } catch (error) {
+            res.status(404).json(err);  
         }
     }
 }

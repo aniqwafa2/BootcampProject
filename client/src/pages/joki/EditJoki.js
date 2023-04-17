@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { detailPaket } from "../../axios/jokiAxios";
+import { editPaket } from "../../axios/jokiAxios";
 
 const EditJoki = () => {
   const imageMimeType = /image\/(png|jpg|jpeg)/i;
@@ -25,9 +26,9 @@ const EditJoki = () => {
   };
 
   const params = useParams();
+  const { id } = params;
 
   useEffect(() => {
-    const { id } = params;
     detailPaket(+id, (result) => {
       setForm({
         description: result.description,
@@ -59,8 +60,8 @@ const EditJoki = () => {
   }, [file]);
 
   const submitHandler = () => {
-    // createPaket(form);
-    // navigate("/joki")
+    editPaket(+id, form)
+    navigate("/joki")
   };
 
   return (

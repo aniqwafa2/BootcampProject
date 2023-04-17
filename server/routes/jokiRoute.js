@@ -16,5 +16,8 @@ jokiRoute.put('/edit',authenticationJoki,uploadImage.single('image'), jokiContro
 jokiRoute.post('/login', jokiController.login);
 jokiRoute.post('/create', uploadImage.single('image'),jokiController.create);
 jokiRoute.post('/createpaket',authenticationJoki,uploadImage.single('image'), jokiController.createPaket);
+jokiRoute.put('/paket/:id', authenticationJoki,uploadImage.single('image'), jokiController.editPaket);
+
+jokiRoute.put('/orderdone/:id',authenticationJoki, jokiController.jokiDone )
 
 module.exports = jokiRoute;
