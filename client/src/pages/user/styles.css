@@ -1,0 +1,13 @@
+.img-preview {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 5px;
+    right: 50px;
+    margin-top: 20px;
+    border: solid white 2px;
+}
+
+.wrap-detail-user {
+    min-height: 70vh;
+}

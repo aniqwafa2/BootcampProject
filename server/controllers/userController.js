@@ -36,7 +36,7 @@ class userController{
             }else{
                 let result2 = await detail_user.create({
                     contact,
-                    image: req.file.originalname,
+                    image: req.file.filename,
                     description,
                     userId : result.id
                 })
@@ -49,16 +49,19 @@ class userController{
 
     static async update(req,res){
         try{
-            const {nama, password, contact, description} = req.body;
-            const id = req.params.id;
+            const {nama, username, password, contact, description} = req.body;
+            // const id = req.params.id;
+            const access_token = req.headers.access_token;
+            const id = tokenVerifier(access_token).id;
             const role = "users";
             let result = await user.update({
                 nama, username, password, role
             },{
                 where: {id}
             })
+            let result2
             if(!req.file){
-                let result2 = await user_detail.update({
+                result2 = await detail_user.update({
                     contact,
                     description
                 },{
@@ -67,7 +70,7 @@ class userController{
                     }
                 })
             }else{
-                let result2 = await user_detail.update({
+                result2 = await detail_user.update({
                     contact,
                     image : req.file.filename,
                     description
@@ -75,6 +78,15 @@ class userController{
                     where:{
                         userId: id
                     }
+                })
+            }
+            if(result2 === 1){
+                res.status(200).json({
+                    message:`User id: ${id} has been updated`
+                });
+            }else{
+                res.status(404).json({
+                    message:`User id: ${id} not found`
                 })
             }
         }catch(err){
@@ -113,7 +125,7 @@ class userController{
                 status: false,
                 rating: 0
             })
-            res.status(201).json({});
+            res.status(201).json({message: "berhasil create order"});
         }catch(err){
             res.status(500).json(err);
         }
@@ -126,7 +138,8 @@ class userController{
             //const userId = req.params.userId
             let result = await order.findAll({
                 where:{userId},
-                include:{model:paket, include:user}
+                include:{model:paket, include:user},
+                order: [["id", "ASC"]],
             })
             res.status(200).json(result);
         }catch(err){
@@ -213,6 +226,31 @@ class userController{
             //res.send({message:'no file'})
         }catch(err){
             res.send(err);
+        }
+    }
+
+    static async rateOrder(req, res){
+        try {
+            const {rating} = req.body;
+            const id = req.params.id;
+            let result = await order.update({
+                    rating
+                },
+                {
+                    where:{id}
+                }
+            );
+            if(result === 1){
+                res.status(200).json({
+                    message:`Rating order id: ${id} has been updated`
+                });
+            }else{
+                res.status(404).json({
+                    message:`Order id: ${id} not found`
+                })
+            }
+        } catch (error) {
+            
         }
     }
 }

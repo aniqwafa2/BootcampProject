@@ -1,0 +1,37 @@
+.card-joki {
+    height: 15rem;
+    width: 100%;
+    margin-top: 0.7rem;
+    margin-bottom: 0.7rem;
+    border-radius: 5px;
+}
+
+.bg-card-joki {
+    background-color: #36445c;
+    outline-color: white;
+    outline-style: inset;
+    outline-width: 1.5px;
+}
+
+.img-preview {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 5px;
+    right: 50px;
+    margin-top: 20px;
+    border: solid white 2px;
+}
+
+.wrap-content-not-full {
+    min-height: 65vh;
+}
+
+.detail-image{
+    max-height: 30rem;
+    object-fit: cover;
+}
+
+.wrap-detail-joki{
+    min-height: 75vh;
+}
